@@ -1,8 +1,8 @@
 # TheKnife – Progetto Laboratorio A 🍴
 
 **Autori**:  
-- Youssef – Design Manager, Document & Quality Manager  
-- [Nome compagno] – Project Manager, System Architect
+- Youssef – Project Manager, Document & Quality Manager  
+- [Nome compagno] – System Architect, Design Manager
 
 ---
 
