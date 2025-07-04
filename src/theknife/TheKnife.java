@@ -75,3 +75,55 @@ public class TheKnife {
 
         scanner.close();
     }
+
+/**
+ * Menù per un utente normale(non ristoratore)
+ */
+public static void menuUtente(Utenteutente, Scanner scanner, RecensioneManager recensioneManager, RistoranteManager ristoranteManager) {
+    boolean esci = false;
+    while (!esci) {
+        System.out.println("\n Menù utente (" + utente.getUsername() + ")");
+        System.out.println("1. Cerca ristoranti per città");
+        System.out.println("2. Aggiungi recensione");
+        System.out.println("3. Visualizza recensioni");
+        System.out.println("4. Logout");
+        System.out.print("Scelta: ");
+        String scelta = scanner.nextLine();
+        switch (scelta) {
+            case "1":
+                System.out.print("Inserisci città: ");
+                String citta = scanner.nextLine();
+                List<Ristorante> trovati = ristoranteManager.cercaPerCitta(citta);
+                for (Ristorante r : trovati) {
+                    System.out.println(r);
+                }
+                break;
+
+            case "2":
+                System.out.print("Scrivi la tua recensione: ");
+                String testo = scanner.nextLine();
+                System.out.print("Quante stelle (1–5): ");
+                int stelle = Integer.parseInt(scanner.nextLine());
+                recensioneManager.aggiungiRecensione(utente.getUsername(), testo, stelle);
+                System.out.println("✅ Recensione salvata.");
+                break;
+
+            case "3":
+                List<Recensione> lista = recensioneManager.getTutteLeRecensioni();
+                for (Recensione r : lista) {
+                    System.out.println(r + "\n");
+                }
+                break;
+
+            case "4":
+                esci = true;
+                System.out.println("👋 Logout effettuato.");
+                break;
+
+            default:
+                System.out.println("Scelta non valida.");
+        }
+    }
+}
+
+
