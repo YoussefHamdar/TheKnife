@@ -19,7 +19,7 @@ public class TheKnife {
         boolean esci = false;
 
         while (!esci) {
-            System.out.println("\n🔐 BENVENUTO SU THEKNIFE 🔪");
+            System.out.println("\n BENVENUTO SU THEKNIFE ");
             System.out.println("1. Registrati");
             System.out.println("2. Login");
             System.out.println("3. Esci");
@@ -37,9 +37,9 @@ public class TheKnife {
 
                     boolean ok = gestioneUtenti.registraUtente(nome, username, password);
                     if (ok) {
-                        System.out.println("✅ Registrazione completata!");
+                        System.out.println("Registrazione completata!");
                     } else {
-                        System.out.println("❌ Username già esistente.");
+                        System.out.println("Username già esistente.");
                     }
                     break;
 
@@ -52,20 +52,20 @@ public class TheKnife {
                     Utente u = gestioneUtenti.login(user, pass);
                     if (u != null) {
                         utenteLoggato = u;
-                        System.out.println("✅ Login riuscito. Ciao, " + u.getNome() + "!");
+                        System.out.println("Login riuscito. Ciao, " + u.getNome() + "!");
                         if (u instanceof Ristoratore) {
                             menuRistoratore((Ristoratore) u, scanner, recensioneManager, ristoranteManager);
                         } else {
                             menuUtente(u, scanner, recensioneManager, ristoranteManager);
                         }
                     } else {
-                        System.out.println("❌ Credenziali errate.");
+                        System.out.println("Credenziali errate.");
                     }
                     break;
 
                 case "3":
                     esci = true;
-                    System.out.println("👋 Grazie per aver usato TheKnife!");
+                    System.out.println("Grazie per aver usato TheKnife!");
                     break;
 
                 default:
@@ -79,7 +79,7 @@ public class TheKnife {
 /**
  * Menù per un utente normale(non ristoratore)
  */
-public static void menuUtente(Utenteutente, Scanner scanner, RecensioneManager recensioneManager, RistoranteManager ristoranteManager) {
+public static void menuUtente(Utente utente, Scanner scanner, RecensioneManager recensioneManager, RistoranteManager ristoranteManager) {
     boolean esci = false;
     while (!esci) {
         System.out.println("\n Menù utente (" + utente.getUsername() + ")");
@@ -105,7 +105,7 @@ public static void menuUtente(Utenteutente, Scanner scanner, RecensioneManager r
                 System.out.print("Quante stelle (1–5): ");
                 int stelle = Integer.parseInt(scanner.nextLine());
                 recensioneManager.aggiungiRecensione(utente.getUsername(), testo, stelle);
-                System.out.println("✅ Recensione salvata.");
+                System.out.println("Recensione salvata.");
                 break;
 
             case "3":
@@ -117,11 +117,56 @@ public static void menuUtente(Utenteutente, Scanner scanner, RecensioneManager r
 
             case "4":
                 esci = true;
-                System.out.println("👋 Logout effettuato.");
+                System.out.println("Logout effettuato.");
                 break;
 
             default:
                 System.out.println("Scelta non valida.");
+        }
+    }
+}
+    /**
+     * Menù per il ristoratore
+     */
+    public static void menuRistoratore(Ristoratore ristoratore, Scanner scanner, RecensioneManager recensioneManager, RistoranteManager ristoranteManager) {
+        boolean esci = false;
+        while (!esci) {
+            System.out.println("\n Menù ristoratore (" + ristoratore.getUsername() + ")");
+            System.out.println("1. Visualizza recensioni");
+            System.out.println("2. Rispondi a una recensione");
+            System.out.println("3. Logout");
+            System.out.print("Scelta: ");
+            String scelta = scanner.nextLine();
+
+            switch (scelta) {
+                case "1":
+                    List<Recensione> lista = recensioneManager.getTutteLeRecensioni();
+                    for (int i = 0; i < lista.size(); i++) {
+                        System.out.println(i + ". " + lista.get(i) + "\n");
+                    }
+                    break;
+
+                case "2":
+                    List<Recensione> tutte = recensioneManager.getTutteLeRecensioni();
+                    for (int i = 0; i < tutte.size(); i++) {
+                        System.out.println(i + ". " + tutte.get(i) + "\n");
+                    }
+                    System.out.print("Numero della recensione: ");
+                    int index = Integer.parseInt(scanner.nextLine());
+                    System.out.print("Scrivi la risposta: ");
+                    String risposta = scanner.nextLine();
+                    ristoratore.rispondiARecensione(tutte.get(index), risposta);
+                    System.out.println("Risposta inviata.");
+                    break;
+
+                case "3":
+                    esci = true;
+                    System.out.println("Logout effettuato.");
+                    break;
+
+                default:
+                    System.out.println("Scelta non valida.");
+            }
         }
     }
 }
