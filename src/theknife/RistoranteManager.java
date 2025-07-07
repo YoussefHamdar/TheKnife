@@ -17,7 +17,7 @@ public class RistoranteManager {
      * Costruttore: carica i ristoranti da un file CSV.
      */
     public RistoranteManager() {
-        this.ristoranti = caricaDaCSV("ristoranti.csv"); // puoi cambiare il nome file se serve
+        this.ristoranti = caricaDaCSV("data/michelin_my_maps.csv"); // puoi cambiare il nome file se serve
     }
 
     /**
