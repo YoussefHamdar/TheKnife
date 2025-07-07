@@ -232,6 +232,9 @@ public class TheKnife {
                     break;
 
                 case "4":
+                    esci = true;
+                    System.out.println("Logout effettuato.");
+                    break;
 
 
                 default:
