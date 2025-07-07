@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 /**
  * Classe principale dell'app TheKnife.
- * Gestisce registrazione, login, e il menù principale.
+ * Gestisce registrazione, login e i menù utente e ristoratore.
  */
 public class TheKnife {
 
@@ -76,57 +76,115 @@ public class TheKnife {
         scanner.close();
     }
 
-/**
- * Menù per un utente normale(non ristoratore)
- */
-public static void menuUtente(Utente utente, Scanner scanner, RecensioneManager recensioneManager, RistoranteManager ristoranteManager) {
-    boolean esci = false;
-    while (!esci) {
-        System.out.println("\n Menù utente (" + utente.getUsername() + ")");
-        System.out.println("1. Cerca ristoranti per città");
-        System.out.println("2. Aggiungi recensione");
-        System.out.println("3. Visualizza recensioni");
-        System.out.println("4. Logout");
-        System.out.print("Scelta: ");
-        String scelta = scanner.nextLine();
-        switch (scelta) {
-            case "1":
-                System.out.print("Inserisci città: ");
-                String citta = scanner.nextLine();
-                List<Ristorante> trovati = ristoranteManager.cercaPerCitta(citta);
-                for (Ristorante r : trovati) {
-                    System.out.println(r);
-                }
-                break;
+    /**
+     * Menù per utente normale
+     */
+    public static void menuUtente(Utente utente, Scanner scanner, RecensioneManager recensioneManager, RistoranteManager ristoranteManager) {
+        boolean esci = false;
+        while (!esci) {
+            System.out.println("\n Menù utente (" + utente.getUsername() + ")");
+            System.out.println("1. Cerca ristoranti per città");
+            System.out.println("2. Aggiungi recensione");
+            System.out.println("3. Visualizza recensioni");
+            System.out.println("4. Gestisci preferiti");
+            System.out.println("5. Logout");
+            System.out.print("Scelta: ");
+            String scelta = scanner.nextLine();
 
-            case "2":
-                System.out.print("Scrivi la tua recensione: ");
-                String testo = scanner.nextLine();
-                System.out.print("Quante stelle (1–5): ");
-                int stelle = Integer.parseInt(scanner.nextLine());
-                recensioneManager.aggiungiRecensione(utente.getUsername(), testo, stelle);
-                System.out.println("Recensione salvata.");
-                break;
+            switch (scelta) {
+                case "1":
+                    System.out.print("Inserisci città: ");
+                    String citta = scanner.nextLine();
+                    List<Ristorante> trovati = ristoranteManager.cercaPerCitta(citta);
+                    for (Ristorante r : trovati) {
+                        System.out.println(r);
+                    }
+                    break;
 
-            case "3":
-                List<Recensione> lista = recensioneManager.getTutteLeRecensioni();
-                for (Recensione r : lista) {
-                    System.out.println(r + "\n");
-                }
-                break;
+                case "2":
+                    System.out.print("Scrivi la tua recensione: ");
+                    String testo = scanner.nextLine();
+                    System.out.print("Quante stelle (1–5): ");
+                    int stelle = Integer.parseInt(scanner.nextLine());
+                    recensioneManager.aggiungiRecensione(utente.getUsername(), testo, stelle);
+                    System.out.println("Recensione salvata.");
+                    break;
 
-            case "4":
-                esci = true;
-                System.out.println("Logout effettuato.");
-                break;
+                case "3":
+                    List<Recensione> lista = recensioneManager.getTutteLeRecensioni();
+                    for (Recensione r : lista) {
+                        System.out.println(r + "\n");
+                    }
+                    break;
 
-            default:
-                System.out.println("Scelta non valida.");
+                case "4":
+                    boolean esciPreferiti = false;
+                    while (!esciPreferiti) {
+                        System.out.println("\n Gestione preferiti");
+                        System.out.println("1. Aggiungi ristorante dai disponibili");
+                        System.out.println("2. Rimuovi dai preferiti");
+                        System.out.println("3. Visualizza preferiti");
+                        System.out.println("4. Torna al menù utente");
+                        System.out.print("Scelta: ");
+                        String sottoScelta = scanner.nextLine();
+
+                        switch (sottoScelta) {
+                            case "1":
+                                List<Ristorante> elenco = ristoranteManager.getTuttiIRistoranti();
+                                for (int i = 0; i < elenco.size(); i++) {
+                                    System.out.println(i + ". " + elenco.get(i));
+                                }
+                                System.out.print("Numero da aggiungere: ");
+                                int indexAggiungi = Integer.parseInt(scanner.nextLine());
+                                if (indexAggiungi >= 0 && indexAggiungi < elenco.size()) {
+                                    utente.aggiungiPreferito(elenco.get(indexAggiungi));
+                                    System.out.println("Ristorante aggiunto ai preferiti.");
+                                }
+                                break;
+
+                            case "2":
+                                List<Ristorante> pref = utente.getPreferiti();
+                                for (int i = 0; i < pref.size(); i++) {
+                                    System.out.println(i + ". " + pref.get(i));
+                                }
+                                System.out.print("Numero da rimuovere: ");
+                                int indexRimuovi = Integer.parseInt(scanner.nextLine());
+                                if (indexRimuovi >= 0 && indexRimuovi < pref.size()) {
+                                    utente.rimuoviPreferito(pref.get(indexRimuovi));
+                                    System.out.println("Ristorante rimosso dai preferiti.");
+                                }
+                                break;
+
+                            case "3":
+                                System.out.println("I tuoi ristoranti preferiti:");
+                                for (Ristorante r : utente.getPreferiti()) {
+                                    System.out.println("- " + r);
+                                }
+                                break;
+
+                            case "4":
+                                esciPreferiti = true;
+                                break;
+
+                            default:
+                                System.out.println("Scelta non valida.");
+                        }
+                    }
+                    break;
+
+                case "5":
+                    esci = true;
+                    System.out.println("Logout effettuato.");
+                    break;
+
+                default:
+                    System.out.println("Scelta non valida.");
+            }
         }
     }
-}
+
     /**
-     * Menù per il ristoratore
+     * Menù per ristoratore
      */
     public static void menuRistoratore(Ristoratore ristoratore, Scanner scanner, RecensioneManager recensioneManager, RistoranteManager ristoranteManager) {
         boolean esci = false;
@@ -134,7 +192,8 @@ public static void menuUtente(Utente utente, Scanner scanner, RecensioneManager 
             System.out.println("\n Menù ristoratore (" + ristoratore.getUsername() + ")");
             System.out.println("1. Visualizza recensioni");
             System.out.println("2. Rispondi a una recensione");
-            System.out.println("3. Logout");
+            System.out.println("3. Aggiungi ristorante");
+            System.out.println("4. Logout");
             System.out.print("Scelta: ");
             String scelta = scanner.nextLine();
 
@@ -160,6 +219,19 @@ public static void menuUtente(Utente utente, Scanner scanner, RecensioneManager 
                     break;
 
                 case "3":
+                    System.out.print("Nome ristorante: ");
+                    String nome = scanner.nextLine();
+                    System.out.print("Città: ");
+                    String citta = scanner.nextLine();
+                    System.out.print("Numero stelle (1–5): ");
+                    int stelle = Integer.parseInt(scanner.nextLine());
+
+                    Ristorante nuovo = new Ristorante(nome, citta, stelle);
+                    ristoranteManager.aggiungiRistorante(nuovo);
+                    System.out.println("✅ Ristorante aggiunto con successo.");
+                    break;
+
+                case "4":
                     esci = true;
                     System.out.println("Logout effettuato.");
                     break;
@@ -170,5 +242,3 @@ public static void menuUtente(Utente utente, Scanner scanner, RecensioneManager 
         }
     }
 }
-
-
