@@ -228,7 +228,7 @@ public class TheKnife {
 
                     Ristorante nuovo = new Ristorante(nome, citta, stelle);
                     ristoranteManager.aggiungiRistorante(nuovo);
-                    System.out.println("✅ Ristorante aggiunto con successo.");
+                    System.out.println("Ristorante aggiunto con successo.");
                     break;
 
                 case "4":
