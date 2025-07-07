@@ -232,9 +232,7 @@ public class TheKnife {
                     break;
 
                 case "4":
-                    esci = true;
-                    System.out.println("Logout effettuato.");
-                    break;
+
 
                 default:
                     System.out.println("Scelta non valida.");
