@@ -34,17 +34,21 @@ public class RistoranteManager {
             br.readLine(); // salta intestazione
 
             while ((linea = br.readLine()) != null) {
-                String[] campi = linea.split(";");
-                if (campi.length >= 3) {
-                    String nome = campi[0].trim();
-                    String citta = campi[1].trim();
-                    String campoStelle = campi[2].trim();
+                String[] campi = linea.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+                if (campi.length >= 12) {
+                    String nome = campi[0].replace("\"", "").trim();
+                    String citta = campi[2].replace("\"", "").trim();
+                    String campoStelle = campi[11].replace("\"", "").trim();
 
-                    int stelle = campoStelle.replaceAll("[^★]", "").length(); // conta stelle
+                    int stelle = campoStelle.replaceAll("[^0-9]", "").isEmpty() ? 0 :
+                            Integer.parseInt(campoStelle.replaceAll("[^0-9]", ""));
 
                     Ristorante r = new Ristorante(nome, citta, stelle);
+                    System.out.println(" Caricato: " + r);
                     lista.add(r);
                 }
+
+
             }
 
         } catch (IOException e) {
@@ -63,12 +67,13 @@ public class RistoranteManager {
     public List<Ristorante> cercaPerCitta(String citta) {
         List<Ristorante> risultati = new ArrayList<>();
         for (Ristorante r : ristoranti) {
-            if (r.getCitta().equalsIgnoreCase(citta)) {
+            if (r.getCitta().toLowerCase().contains(citta.toLowerCase())) {
                 risultati.add(r);
             }
         }
         return risultati;
     }
+
 
     /**
      * Aggiunge un nuovo ristorante alla lista (per ristoratori).

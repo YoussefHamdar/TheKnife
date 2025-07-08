@@ -94,12 +94,22 @@ public class TheKnife {
             switch (scelta) {
                 case "1":
                     System.out.print("Inserisci città: ");
-                    String citta = scanner.nextLine();
+                    String citta = scanner.nextLine().trim(); // elimina spazi extra
+
                     List<Ristorante> trovati = ristoranteManager.cercaPerCitta(citta);
-                    for (Ristorante r : trovati) {
-                        System.out.println(r);
+
+                    if (trovati.isEmpty()) {
+                        System.out.println("Nessun ristorante trovato per '" + citta + "'");
+                    } else {
+                        System.out.println("Ristoranti trovati:");
+                        for (Ristorante r : trovati) {
+                            System.out.println("- " + r);
+                        }
                     }
+
+                    System.out.println(); // spazio per tornare al menù
                     break;
+
 
                 case "2":
                     System.out.print("Scrivi la tua recensione: ");
