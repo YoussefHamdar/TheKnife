@@ -7,6 +7,7 @@ import java.time.LocalDate;
  */
 public class Recensione {
     private String autore;
+    private String nomeRistorante;
     private String testo;
     private int stelle;
     private LocalDate data;
@@ -20,8 +21,9 @@ public class Recensione {
      * @param stelle numero di stelle (1–5)
      * @param data data in cui è stata scritta
      */
-    public Recensione(String autore, String testo, int stelle, LocalDate data) {
+    public Recensione(String autore, String nomeRistorante, String testo, int stelle, LocalDate data) {
         this.autore = autore;
+        this.nomeRistorante = nomeRistorante;
         this.testo = testo;
         this.stelle = stelle;
         this.data = data;
@@ -29,6 +31,7 @@ public class Recensione {
     }
 
     public String getAutore() { return autore; }
+    public String getNomeRistorante() { return nomeRistorante; }
     public String getTesto() { return testo; }
     public int getStelle() { return stelle; }
     public LocalDate getData() { return data; }
@@ -48,10 +51,11 @@ public class Recensione {
 
     @Override
     public String toString() {
-        String output = "📝 Recensione di " + autore + " (" + stelle + "⭐) [" + data + "]\n" +
-                testo;
+        String output = "Recensione di " + autore +
+                " sul ristorante '" + nomeRistorante +
+                "' (" + stelle + ") [" + data + "]\n" + testo;
         if (rispostaDelRistoratore != null) {
-            output += "\n👨‍🍳 Risposta del ristoratore: " + rispostaDelRistoratore;
+            output += "\n Risposta del ristoratore: " + rispostaDelRistoratore;
         }
         return output;
     }

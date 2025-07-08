@@ -24,8 +24,8 @@ public class RecensioneManager {
      * @param testo testo della recensione
      * @param stelle numero di stelle (1-5)
      */
-    public void aggiungiRecensione(String autore, String testo, int stelle) {
-        Recensione r = new Recensione(autore, testo, stelle, LocalDate.now());
+    public void aggiungiRecensione(String username, String nomeRistorante, String testo, int stelle) {
+        Recensione r = new Recensione(username, nomeRistorante, testo, stelle, LocalDate.now());
         recensioni.add(r);
     }
 
