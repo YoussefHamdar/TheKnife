@@ -237,6 +237,74 @@ public class TheKnife {
 
                 default:
                     System.out.println("Scelta non valida.");
+
+                case "6": {
+                    List<Recensione> tutte = recensioneManager.getTutteLeRecensioni();
+                    List<Recensione> mie = new ArrayList<>();
+
+                    for (Recensione r : tutte) {
+                        if (r.getAutore().equals(utente.getUsername())) {
+                            mie.add(r);
+                        }
+                    }
+                    if (mie.isEmpty()) {
+                        System.out.println(" Non hai ancora scritto recensioni.");
+                        break;
+                    }
+
+                    System.out.println("Le tue recensioni:");
+                    for (int i = 0; i < mie.size(); i++) {
+                        System.out.println(i + ". " + mie.get(i));
+                    }
+
+                    System.out.print("Numero recensione da modificare: ");
+                    int scelta = Integer.parseInt(scanner.nextLine());
+
+                    if (scelta >= 0 && scelta < mie.size()) {
+                        Recensione daModificare = mie.get(scelta);
+                        System.out.print("Nuovo testo: ");
+                        String nuovoTesto = scanner.nextLine();
+                        System.out.print("Nuove stelle (1–5): ");
+                        int nuoveStelle = Integer.parseInt(scanner.nextLine());
+
+                        recensioneManager.modificaRecensione(daModificare, nuovoTesto, nuoveStelle);
+                        System.out.println("Recensione aggiornata.");
+                    } else {
+                        System.out.println(" Scelta non valida.");
+                    }
+                    break;
+                }
+                case "7": {
+                    List<Recensione> tutte = recensioneManager.getTutteLeRecensioni();
+                    List<Recensione> mie = new ArrayList<>();
+
+                    for (Recensione r : tutte) {
+                        if (r.getAutore().equals(utente.getUsername())) {
+                            mie.add(r);
+                        }
+                    }
+
+                    if (mie.isEmpty()) {
+                        System.out.println(" Non hai ancora scritto recensioni.");
+                        break;
+                    }
+
+                    System.out.println("Le tue recensioni:");
+                    for (int i = 0; i < mie.size(); i++) {
+                        System.out.println(i + ". " + mie.get(i));
+                    }
+
+                    System.out.print("Numero recensione da eliminare: ");
+                    int scelta = Integer.parseInt(scanner.nextLine());
+
+                    if (scelta >= 0 && scelta < mie.size()) {
+                        recensioneManager.rimuoviRecensione(mie.get(scelta));
+                        System.out.println("🗑 Recensione eliminata.");
+                    } else {
+                        System.out.println(" Scelta non valida.");
+                    }
+                    break;
+                }
             }
         }
     }
