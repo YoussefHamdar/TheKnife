@@ -20,7 +20,8 @@ public class RecensioneManager {
     /**
      * Aggiunge una nuova recensione all'elenco.
      *
-     * @param autore username dell'autore
+     * @param username username dell'autore
+     * @param nomeRistorante nome del ristorante recensito
      * @param testo testo della recensione
      * @param stelle numero di stelle (1-5)
      */

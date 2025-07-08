@@ -22,14 +22,18 @@ public class GestioneUtenti {
      * @param password password in chiaro
      * @return true se registrazione avvenuta con successo
      */
-    public boolean registraUtente(String nome, String username, String password) {
-        if (getUtenteDaUsername(username) != null) {
-            return false; // username già esistente
+    public boolean registraUtente(String nome, String username, String password, boolean isRistoratore) {
+        for (Utente u : utenti) {
+            if (u.getUsername().equals(username)) {
+                return false; // già esiste
+            }
         }
         String passwordCifrata = cifra(password);
-        utenti.add(new Utente(nome, username, passwordCifrata));
+        Utente nuovo = new Utente(nome, username, passwordCifrata, isRistoratore);
+        utenti.add(nuovo);
         return true;
     }
+
 
     /**
      * Effettua il login dato username e password.

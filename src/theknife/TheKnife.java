@@ -30,17 +30,27 @@ public class TheKnife {
                 case "1":
                     System.out.print("Nome: ");
                     String nome = scanner.nextLine();
+
                     System.out.print("Username: ");
                     String username = scanner.nextLine();
+
                     System.out.print("Password: ");
                     String password = scanner.nextLine();
 
-                    boolean ok = gestioneUtenti.registraUtente(nome, username, password);
+                    System.out.println("Sei un:\n1. Utente normale\n2. Ristoratore");
+                    System.out.print("Scelta: ");
+                    String sceltaRuolo = scanner.nextLine();
+
+                    boolean isRistoratore = sceltaRuolo.equals("2");
+
+                    boolean ok = gestioneUtenti.registraUtente(nome, username, password, isRistoratore);
+
                     if (ok) {
-                        System.out.println("Registrazione completata!");
+                        System.out.println(" Registrazione completata!");
                     } else {
-                        System.out.println("Username già esistente.");
+                        System.out.println(" Username già esistente.");
                     }
+
                     break;
 
                 case "2":
@@ -53,11 +63,16 @@ public class TheKnife {
                     if (u != null) {
                         utenteLoggato = u;
                         System.out.println("Login riuscito. Ciao, " + u.getNome() + "!");
-                        if (u instanceof Ristoratore) {
-                            menuRistoratore((Ristoratore) u, scanner, recensioneManager, ristoranteManager);
-                        } else {
-                            menuUtente(u, scanner, recensioneManager, ristoranteManager);
+                        if (u != null) {
+                            System.out.println("Login riuscito. Ciao, " + u.getNome() + "!");
+
+                            if (u.isRistoratore()) {
+                                menuRistoratore(u, scanner, recensioneManager, ristoranteManager);
+                            } else {
+                                menuUtente(u, scanner, recensioneManager, ristoranteManager);
+                            }
                         }
+
                     } else {
                         System.out.println("Credenziali errate.");
                     }
@@ -229,7 +244,8 @@ public class TheKnife {
     /**
      * Menù per ristoratore
      */
-    public static void menuRistoratore(Ristoratore ristoratore, Scanner scanner, RecensioneManager recensioneManager, RistoranteManager ristoranteManager) {
+    public static void menuRistoratore(Utente ristoratore, Scanner scanner, RecensioneManager recensioneManager, RistoranteManager ristoranteManager)
+    {
         boolean esci = false;
         while (!esci) {
             System.out.println("\n Menù ristoratore (" + ristoratore.getUsername() + ")");
@@ -248,18 +264,32 @@ public class TheKnife {
                     }
                     break;
 
-                case "2":
+                case "2": {
                     List<Recensione> tutte = recensioneManager.getTutteLeRecensioni();
-                    for (int i = 0; i < tutte.size(); i++) {
-                        System.out.println(i + ". " + tutte.get(i) + "\n");
+
+                    if (tutte.isEmpty()) {
+                        System.out.println(" Nessuna recensione disponibile a cui rispondere.");
+                        break;
                     }
+
+                    for (int i = 0; i < tutte.size(); i++) {
+                        System.out.println(i + ". " + tutte.get(i));
+                    }
+
                     System.out.print("Numero della recensione: ");
                     int index = Integer.parseInt(scanner.nextLine());
-                    System.out.print("Scrivi la risposta: ");
-                    String risposta = scanner.nextLine();
-                    ristoratore.rispondiARecensione(tutte.get(index), risposta);
-                    System.out.println("Risposta inviata.");
+
+                    if (index >= 0 && index < tutte.size()) {
+                        System.out.print("Scrivi la risposta: ");
+                        String risposta = scanner.nextLine();
+                        tutte.get(index).setRispostaDelRistoratore(risposta);
+                        System.out.println("Risposta salvata.");
+                    } else {
+                        System.out.println(" Numero non valido.");
+                    }
                     break;
+                }
+
 
                 case "3":
                     System.out.print("Nome ristorante: ");
