@@ -112,20 +112,53 @@ public class TheKnife {
 
 
                 case "2":
-                    System.out.print("Scrivi la tua recensione: ");
-                    String testo = scanner.nextLine();
-                    System.out.print("Quante stelle (1–5): ");
-                    int stelle = Integer.parseInt(scanner.nextLine());
-                    recensioneManager.aggiungiRecensione(utente.getUsername(), testo, stelle);
-                    System.out.println("Recensione salvata.");
-                    break;
+                    List<Ristorante> ristorantiDisponibili = ristoranteManager.getTuttiIRistoranti();
 
-                case "3":
-                    List<Recensione> lista = recensioneManager.getTutteLeRecensioni();
-                    for (Recensione r : lista) {
-                        System.out.println(r + "\n");
+                    System.out.println("Scegli il ristorante da recensire:");
+                    for (int i = 0; i < ristorantiDisponibili.size(); i++) {
+                        System.out.println(i + ". " + ristorantiDisponibili.get(i));
+                    }
+
+                    System.out.print("Numero ristorante: ");
+                    int index = Integer.parseInt(scanner.nextLine());
+
+                    if (index >= 0 && index < ristorantiDisponibili.size()) {
+                        Ristorante scelto = ristorantiDisponibili.get(index);
+                        System.out.println("Hai scelto: " + scelto.getNome());
+
+                        System.out.print("Scrivi la tua recensione: ");
+                        String testo = scanner.nextLine();
+
+                        System.out.print("Quante stelle (1–5): ");
+                        int stelle = Integer.parseInt(scanner.nextLine());
+
+                        recensioneManager.aggiungiRecensione(
+                                utente.getUsername(),
+                                scelto.getNome(),
+                                testo,
+                                stelle
+                        );
+
+                        System.out.println(" Recensione salvata per " + scelto.getNome());
+                    } else {
+                        System.out.println(" Scelta non valida.");
                     }
                     break;
+
+
+                case "3":
+                    List<Recensione> tutte = recensioneManager.getTutteLeRecensioni();
+                    if (tutte.isEmpty()) {
+                        System.out.println(" Nessuna recensione disponibile.");
+                    } else {
+                        System.out.println(" Tutte le recensioni:\n");
+                        for (Recensione r : tutte) {
+                            System.out.println(r);
+                            System.out.println("--------------------------------------------------");
+                        }
+                    }
+                    break;
+
 
                 case "4":
                     boolean esciPreferiti = false;
@@ -139,7 +172,7 @@ public class TheKnife {
                         String sottoScelta = scanner.nextLine();
 
                         switch (sottoScelta) {
-                            case "1":
+                            case "1": {
                                 List<Ristorante> elenco = ristoranteManager.getTuttiIRistoranti();
                                 for (int i = 0; i < elenco.size(); i++) {
                                     System.out.println(i + ". " + elenco.get(i));
@@ -151,8 +184,8 @@ public class TheKnife {
                                     System.out.println("Ristorante aggiunto ai preferiti.");
                                 }
                                 break;
-
-                            case "2":
+                            }
+                            case "2": {
                                 List<Ristorante> pref = utente.getPreferiti();
                                 for (int i = 0; i < pref.size(); i++) {
                                     System.out.println(i + ". " + pref.get(i));
@@ -164,18 +197,18 @@ public class TheKnife {
                                     System.out.println("Ristorante rimosso dai preferiti.");
                                 }
                                 break;
-
-                            case "3":
+                            }
+                            case "3": {
                                 System.out.println("I tuoi ristoranti preferiti:");
                                 for (Ristorante r : utente.getPreferiti()) {
                                     System.out.println("- " + r);
                                 }
                                 break;
-
-                            case "4":
+                            }
+                            case "4": {
                                 esciPreferiti = true;
                                 break;
-
+                            }
                             default:
                                 System.out.println("Scelta non valida.");
                         }
