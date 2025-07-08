@@ -2,6 +2,7 @@ package theknife;
 
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 /**
  * Classe principale dell'app TheKnife.
@@ -238,75 +239,90 @@ public class TheKnife {
                 default:
                     System.out.println("Scelta non valida.");
 
-                case "6": {
-                    List<Recensione> tutte = recensioneManager.getTutteLeRecensioni();
-                    List<Recensione> mie = new ArrayList<>();
+                    switch (scelta) {
+                        case "6": {
+                            List<Recensione> mie = getRecensioniUtente(utente, recensioneManager);
 
-                    for (Recensione r : tutte) {
-                        if (r.getAutore().equals(utente.getUsername())) {
-                            mie.add(r);
+                            if (mie.isEmpty()) {
+                                System.out.println("Non hai ancora scritto recensioni.");
+                                break;
+                            }
+
+                            System.out.println("Le tue recensioni:");
+                            for (int i = 0; i < mie.size(); i++) {
+                                System.out.println(i + ". " + mie.get(i));
+                            }
+
+                            System.out.print("Numero recensione da modificare: ");
+                            try {
+                                int sceltaModifica = Integer.parseInt(scanner.nextLine());
+
+                                if (sceltaModifica >= 0 && sceltaModifica < mie.size()) {
+                                    Recensione daModificare = mie.get(sceltaModifica);
+                                    System.out.println("Recensione attuale:\n" + daModificare);
+
+                                    System.out.print("Nuovo testo: ");
+                                    String nuovoTesto = scanner.nextLine();
+
+                                    System.out.print("Nuove stelle (1–5): ");
+                                    int nuoveStelle = Integer.parseInt(scanner.nextLine());
+
+                                    if (nuoveStelle >= 1 && nuoveStelle <= 5) {
+                                        recensioneManager.modificaRecensione(daModificare, nuovoTesto, nuoveStelle);
+                                        System.out.println(" Recensione aggiornata.");
+                                    } else {
+                                        System.out.println(" Numero di stelle non valido.");
+                                    }
+                                } else {
+                                    System.out.println(" Scelta non valida.");
+                                }
+                            } catch (NumberFormatException e) {
+                                System.out.println(" Inserisci un numero valido.");
+                            }
+                            break;
                         }
-                    }
-                    if (mie.isEmpty()) {
-                        System.out.println(" Non hai ancora scritto recensioni.");
-                        break;
-                    }
 
-                    System.out.println("Le tue recensioni:");
-                    for (int i = 0; i < mie.size(); i++) {
-                        System.out.println(i + ". " + mie.get(i));
-                    }
+                        case "7": {
+                            List<Recensione> mie = getRecensioniUtente(utente, recensioneManager);
 
-                    System.out.print("Numero recensione da modificare: ");
-                    int scelta = Integer.parseInt(scanner.nextLine());
+                            if (mie.isEmpty()) {
+                                System.out.println("Non hai ancora scritto recensioni.");
+                                break;
+                            }
 
-                    if (scelta >= 0 && scelta < mie.size()) {
-                        Recensione daModificare = mie.get(scelta);
-                        System.out.print("Nuovo testo: ");
-                        String nuovoTesto = scanner.nextLine();
-                        System.out.print("Nuove stelle (1–5): ");
-                        int nuoveStelle = Integer.parseInt(scanner.nextLine());
+                            System.out.println("Le tue recensioni:");
+                            for (int i = 0; i < mie.size(); i++) {
+                                System.out.println(i + ". " + mie.get(i));
+                            }
 
-                        recensioneManager.modificaRecensione(daModificare, nuovoTesto, nuoveStelle);
-                        System.out.println("Recensione aggiornata.");
-                    } else {
-                        System.out.println(" Scelta non valida.");
-                    }
-                    break;
-                }
-                case "7": {
-                    List<Recensione> tutte = recensioneManager.getTutteLeRecensioni();
-                    List<Recensione> mie = new ArrayList<>();
+                            System.out.print("Numero recensione da eliminare: ");
+                            try {
+                                int sceltaElimina = Integer.parseInt(scanner.nextLine());
 
-                    for (Recensione r : tutte) {
-                        if (r.getAutore().equals(utente.getUsername())) {
-                            mie.add(r);
+                                if (sceltaElimina >= 0 && sceltaElimina < mie.size()) {
+                                    System.out.println("Recensione eliminata:\n" + mie.get(sceltaElimina));
+                                    recensioneManager.rimuoviRecensione(mie.get(sceltaElimina));
+                                    System.out.println(" Recensione rimossa con successo.");
+                                } else {
+                                    System.out.println(" Scelta non valida.");
+                                }
+                            } catch (NumberFormatException e) {
+                                System.out.println(" Inserisci un numero valido.");
+                            }
+                            break;
                         }
-                    }
 
-                    if (mie.isEmpty()) {
-                        System.out.println(" Non hai ancora scritto recensioni.");
-                        break;
+                        default:
+                            System.out.println("Scelta non valida.");
+                            break;
                     }
-
-                    System.out.println("Le tue recensioni:");
-                    for (int i = 0; i < mie.size(); i++) {
-                        System.out.println(i + ". " + mie.get(i));
-                    }
-
-                    System.out.print("Numero recensione da eliminare: ");
-                    int scelta = Integer.parseInt(scanner.nextLine());
-
-                    if (scelta >= 0 && scelta < mie.size()) {
-                        recensioneManager.rimuoviRecensione(mie.get(scelta));
-                        System.out.println("🗑 Recensione eliminata.");
-                    } else {
-                        System.out.println(" Scelta non valida.");
-                    }
-                    break;
-                }
             }
         }
+    }
+    private static List<Recensione> getRecensioniUtente(Utente utente, RecensioneManager manager) {
+        return manager.getTutteLeRecensioni().stream()
+                .filter(r -> r.getAutore().equals(utente.getUsername()))
+                .collect(Collectors.toList());
     }
 
     /**
