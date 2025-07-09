@@ -46,12 +46,13 @@ public class RistoranteManager {
                     String servizi = campi[12].toLowerCase(); // oppure campi[13]
 
                     boolean deliveryDisponibile = servizi.contains("delivery");
+                    boolean prenotazioneOnlineDisponibile = servizi.contains("reservation") || servizi.contains("prenotazione");
 
 
                     int stelle = campoStelle.replaceAll("[^0-9]", "").isEmpty() ? 0 :
                             Integer.parseInt(campoStelle.replaceAll("[^0-9]", ""));
 
-                    Ristorante r = new Ristorante(nome, citta, stelle, tipoCucina, fasciaPrezzo, deliveryDisponibile);
+                    Ristorante r = new Ristorante(nome, citta, stelle, tipoCucina, fasciaPrezzo, deliveryDisponibile,prenotazioneOnlineDisponibile);
 
                     System.out.println(" Caricato: " + r);
                     lista.add(r);
@@ -115,6 +116,11 @@ public class RistoranteManager {
     public List<Ristorante> cercaConDelivery() {
         return ristoranti.stream()
                 .filter(Ristorante::isDeliveryDisponibile)
+                .collect(Collectors.toList());
+    }
+    public List<Ristorante> cercaConPrenotazioneOnline() {
+        return ristoranti.stream()
+                .filter(Ristorante::isPrenotazioneOnlineDisponibile)
                 .collect(Collectors.toList());
     }
 

@@ -6,22 +6,28 @@ public class Ristorante {
     private int stelle;
     private String tipoCucina;
     private String fasciaPrezzo;
-
     private boolean deliveryDisponibile;
+    private boolean prenotazioneOnlineDisponibile;
 
 
 
-    public Ristorante(String nome, String citta, int stelle, String tipoCucina, String fasciaPrezzo,boolean deliveryDisponibile) {
+    public Ristorante(String nome, String citta, int stelle, String tipoCucina, String fasciaPrezzo,boolean deliveryDisponibile, boolean prenotazioneOnlineDisponibile) {
         this.nome = nome;
         this.citta = citta;
         this.stelle = stelle;
         this.tipoCucina = tipoCucina;
         this.fasciaPrezzo = fasciaPrezzo;
         this.deliveryDisponibile = deliveryDisponibile;
+        this.prenotazioneOnlineDisponibile = prenotazioneOnlineDisponibile;
     }
 
     public boolean isDeliveryDisponibile() {
         return deliveryDisponibile;
+    }
+
+
+    public boolean isPrenotazioneOnlineDisponibile() {
+        return prenotazioneOnlineDisponibile;
     }
 
 
