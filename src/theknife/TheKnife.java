@@ -3,6 +3,7 @@ package theknife;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
+import java.time.LocalDate;
 
 /**
  * Classe principale dell'app TheKnife.
@@ -32,6 +33,21 @@ public class TheKnife {
                     System.out.print("Nome: ");
                     String nome = scanner.nextLine();
 
+                    System.out.print("Cognome: ");
+                    String cognome = scanner.nextLine();
+
+                    System.out.print("Domicilio: ");
+                    String domicilio = scanner.nextLine();
+
+                    System.out.print("Data di nascita (aaaa-mm-gg): ");
+                    String dataStr = scanner.nextLine();
+                    LocalDate dataDiNascita = null;
+                    try {
+                        dataDiNascita = LocalDate.parse(dataStr);
+                    } catch (Exception e) {
+                        System.out.println("Formato data non valido. Continuiamo senza.");
+                    }
+
                     System.out.print("Username: ");
                     String username = scanner.nextLine();
 
@@ -41,18 +57,21 @@ public class TheKnife {
                     System.out.println("Sei un:\n1. Utente normale\n2. Ristoratore");
                     System.out.print("Scelta: ");
                     String sceltaRuolo = scanner.nextLine();
-
                     boolean isRistoratore = sceltaRuolo.equals("2");
 
-                    boolean ok = gestioneUtenti.registraUtente(nome, username, password, isRistoratore);
+                    boolean ok = gestioneUtenti.registraUtente(
+                            nome, cognome, username, password,
+                            isRistoratore, domicilio, dataDiNascita
+                    );
 
                     if (ok) {
-                        System.out.println(" Registrazione completata!");
+                        System.out.println("Registrazione completata!");
                     } else {
-                        System.out.println(" Username già esistente.");
+                        System.out.println("Username già esistente.");
                     }
 
                     break;
+
 
                 case "2":
                     System.out.print("Username: ");
@@ -104,6 +123,8 @@ public class TheKnife {
             System.out.println("3. Visualizza recensioni");
             System.out.println("4. Gestisci preferiti");
             System.out.println("5. Logout");
+            System.out.println("6. Modifica una tua recensione");
+            System.out.println("7. Cancella una tua recensione");
             System.out.print("Scelta: ");
             String scelta = scanner.nextLine();
 
@@ -184,6 +205,8 @@ public class TheKnife {
                         System.out.println("2. Rimuovi dai preferiti");
                         System.out.println("3. Visualizza preferiti");
                         System.out.println("4. Torna al menù utente");
+                        System.out.println("6. Modifica una tua recensione");
+                        System.out.println("7. Cancella una tua recensione");
                         System.out.print("Scelta: ");
                         String sottoScelta = scanner.nextLine();
 

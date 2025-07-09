@@ -2,7 +2,7 @@ package theknife;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.time.LocalDate;
 /**
  * Rappresenta un utente registrato nell'app.
  * Contiene nome, username, password cifrata e preferiti.
@@ -14,15 +14,22 @@ public class Utente {
     private String passwordCifrata;
     private List<Ristorante> preferiti;
     private boolean isRistoratore;
+    private String cognome;
+    private String domicilio;
+    private LocalDate dataDiNascita;
 
 
-    public Utente(String nome, String username, String passwordCifrata, boolean isRistoratore) {
+    public Utente(String nome, String cognome, String username, String password, boolean isRistoratore, String domicilio, LocalDate dataDiNascita) {
         this.nome = nome;
+        this.cognome = cognome;
         this.username = username;
-        this.passwordCifrata = passwordCifrata;
+        this.passwordCifrata = password;
         this.isRistoratore = isRistoratore;
+        this.domicilio = domicilio;
+        this.dataDiNascita = dataDiNascita;
         this.preferiti = new ArrayList<>();
     }
+
 
 
     public String getNome() { return nome; }
@@ -32,6 +39,18 @@ public class Utente {
     public boolean isRistoratore() {
         return isRistoratore;
     }
+    public String getCognome() {
+        return cognome;
+    }
+
+    public String getDomicilio() {
+        return domicilio;
+    }
+
+    public LocalDate getDataDiNascita() {
+        return dataDiNascita;
+    }
+
 
 
     public void aggiungiPreferito(Ristorante r) {
@@ -46,6 +65,10 @@ public class Utente {
 
     @Override
     public String toString() {
-        return "Utente: " + nome + " (" + username + ")";
+        return "Utente: " + nome + " " + cognome + " (" + username + "), domicilio: " + domicilio;
     }
 }
+
+
+
+

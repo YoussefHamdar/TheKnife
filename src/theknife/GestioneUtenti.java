@@ -2,6 +2,8 @@ package theknife;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDate;
+
 
 /**
  * Gestisce la registrazione e il login degli utenti.
@@ -22,14 +24,15 @@ public class GestioneUtenti {
      * @param password password in chiaro
      * @return true se registrazione avvenuta con successo
      */
-    public boolean registraUtente(String nome, String username, String password, boolean isRistoratore) {
+    public boolean registraUtente(String nome, String cognome, String username, String password, boolean isRistoratore, String domicilio, LocalDate dataDiNascita) {
         for (Utente u : utenti) {
             if (u.getUsername().equals(username)) {
                 return false; // già esiste
             }
         }
+
         String passwordCifrata = cifra(password);
-        Utente nuovo = new Utente(nome, username, passwordCifrata, isRistoratore);
+        Utente nuovo = new Utente(nome, cognome, username, passwordCifrata, isRistoratore, domicilio, dataDiNascita);
         utenti.add(nuovo);
         return true;
     }
