@@ -123,6 +123,11 @@ public class RistoranteManager {
                 .filter(Ristorante::isPrenotazioneOnlineDisponibile)
                 .collect(Collectors.toList());
     }
+    public List<Ristorante> cercaPerMediaStelle(double minimo) {
+        return ristoranti.stream()
+                .filter(r -> r.getMediaStelle() >= minimo)
+                .collect(Collectors.toList());
+    }
 
 
 }

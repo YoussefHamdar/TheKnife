@@ -1,5 +1,8 @@
 package theknife;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Ristorante {
     private String nome;
     private String citta;
@@ -8,6 +11,9 @@ public class Ristorante {
     private String fasciaPrezzo;
     private boolean deliveryDisponibile;
     private boolean prenotazioneOnlineDisponibile;
+
+    private List<Recensione> recensioni = new ArrayList<>();
+
 
 
 
@@ -20,17 +26,6 @@ public class Ristorante {
         this.deliveryDisponibile = deliveryDisponibile;
         this.prenotazioneOnlineDisponibile = prenotazioneOnlineDisponibile;
     }
-
-    public boolean isDeliveryDisponibile() {
-        return deliveryDisponibile;
-    }
-
-
-    public boolean isPrenotazioneOnlineDisponibile() {
-        return prenotazioneOnlineDisponibile;
-    }
-
-
 
     public String getNome() {
         return nome;
@@ -51,11 +46,40 @@ public class Ristorante {
         return fasciaPrezzo;
     }
 
+    public boolean isDeliveryDisponibile() {
+        return deliveryDisponibile;
+    }
+
+    public boolean isPrenotazioneOnlineDisponibile() {
+        return prenotazioneOnlineDisponibile;
+    }
+
+    public List<Recensione> getRecensioni() {
+        return recensioni;
+    }
+
+    public void aggiungiRecensione(Recensione r) {
+        recensioni.add(r);
+    }
+
+    public double getMediaStelle() {
+        if (recensioni.isEmpty()) return 0;
+        double somma = 0;
+        for (Recensione r : recensioni) {
+            somma += r.getStelle();
+        }
+        return somma / recensioni.size();
+    }
+
 
 
     @Override
     public String toString() {
         String stelleStr = "★".repeat(this.stelle);
-        return nome + " – " + citta + " (" + stelleStr + ")";
+        String mediaStr = recensioni.isEmpty() ? "– nessuna recensione" : String.format("– media %.1f★", getMediaStelle());
+        String deliveryStr = deliveryDisponibile ? " | Delivery " : "";
+        String prenotazioneStr = prenotazioneOnlineDisponibile ? " | Prenotazione Online " : "";
+
+        return nome + " – " + citta + " (" + stelleStr + ") " + mediaStr + deliveryStr + prenotazioneStr;
     }
 }
