@@ -128,6 +128,23 @@ public class RistoranteManager {
                 .filter(r -> r.getMediaStelle() >= minimo)
                 .collect(Collectors.toList());
     }
+    public List<Ristorante> cercaCombinata(
+            String citta,
+            String tipoCucina,
+            int prezzoMax,
+            boolean requireDelivery,
+            boolean requirePrenotazioneOnline,
+            double minStelle
+    ) {
+        return ristoranti.stream()
+                .filter(r -> r.getCitta().equalsIgnoreCase(citta))
+                .filter(r -> r.getTipoCucina().toLowerCase().contains(tipoCucina.toLowerCase()))
+                .filter(r -> r.getPrezzoMedio() <= prezzoMax)
+                .filter(r -> !requireDelivery || r.isDeliveryDisponibile())
+                .filter(r -> !requirePrenotazioneOnline || r.isPrenotazioneOnlineDisponibile())
+                .filter(r -> r.getMediaStelle() >= minStelle)
+                .collect(Collectors.toList());
+    }
 
 
 }

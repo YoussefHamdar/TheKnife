@@ -62,6 +62,21 @@ public class Ristorante {
         recensioni.add(r);
     }
 
+    public int getPrezzoMedio() {
+        switch (fasciaPrezzo.trim()) {
+            case "€":
+                return 1;
+            case "€€":
+                return 2;
+            case "€€€":
+                return 3;
+            case "$$$":
+                return 4;
+            default:
+                return 0; // valore neutro se fascia non riconosciuta
+        }
+    }
+
     public double getMediaStelle() {
         if (recensioni.isEmpty()) return 0;
         double somma = 0;
