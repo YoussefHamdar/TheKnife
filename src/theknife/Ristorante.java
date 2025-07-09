@@ -7,14 +7,21 @@ public class Ristorante {
     private String tipoCucina;
     private String fasciaPrezzo;
 
+    private boolean deliveryDisponibile;
 
 
-    public Ristorante(String nome, String citta, int stelle, String tipoCucina, String fasciaPrezzo) {
+
+    public Ristorante(String nome, String citta, int stelle, String tipoCucina, String fasciaPrezzo,boolean deliveryDisponibile) {
         this.nome = nome;
         this.citta = citta;
         this.stelle = stelle;
         this.tipoCucina = tipoCucina;
         this.fasciaPrezzo = fasciaPrezzo;
+        this.deliveryDisponibile = deliveryDisponibile;
+    }
+
+    public boolean isDeliveryDisponibile() {
+        return deliveryDisponibile;
     }
 
 

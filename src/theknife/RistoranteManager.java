@@ -43,12 +43,15 @@ public class RistoranteManager {
                     String campoStelle = campi[11].replace("\"", "").trim();
                     String tipoCucina = campi[4].replace("\"", "").trim();
                     String fasciaPrezzo = campi[3].replace("\"", "").trim(); // esempio: €€, €€€, $$$
+                    String servizi = campi[12].toLowerCase(); // oppure campi[13]
+
+                    boolean deliveryDisponibile = servizi.contains("delivery");
 
 
                     int stelle = campoStelle.replaceAll("[^0-9]", "").isEmpty() ? 0 :
                             Integer.parseInt(campoStelle.replaceAll("[^0-9]", ""));
 
-                    Ristorante r = new Ristorante(nome, citta, stelle, tipoCucina, fasciaPrezzo);
+                    Ristorante r = new Ristorante(nome, citta, stelle, tipoCucina, fasciaPrezzo, deliveryDisponibile);
 
                     System.out.println(" Caricato: " + r);
                     lista.add(r);
@@ -107,6 +110,11 @@ public class RistoranteManager {
     public List<Ristorante> cercaPerFasciaPrezzo(String prezzo) {
         return ristoranti.stream()
                 .filter(r -> r.getFasciaPrezzo().equalsIgnoreCase(prezzo))
+                .collect(Collectors.toList());
+    }
+    public List<Ristorante> cercaConDelivery() {
+        return ristoranti.stream()
+                .filter(Ristorante::isDeliveryDisponibile)
                 .collect(Collectors.toList());
     }
 

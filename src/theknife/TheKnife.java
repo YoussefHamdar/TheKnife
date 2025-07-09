@@ -115,12 +115,13 @@ public class TheKnife {
             System.out.println("1. Cerca ristoranti per città");
             System.out.println("2. Cerca ristoranti per tipo cucina");
             System.out.println("3. Cerca per fascia di prezzo");
-            System.out.println("4. Aggiungi recensione");
-            System.out.println("5. Visualizza recensioni");
-            System.out.println("6. Gestisci preferiti");
-            System.out.println("7. Modifica una tua recensione");
-            System.out.println("8. Cancella una tua recensione");
-            System.out.println("9. Logout");
+            System.out.println("4. Cerca ristoranti con servizio delivery");
+            System.out.println("5. Aggiungi recensione");
+            System.out.println("6. Visualizza recensioni");
+            System.out.println("7. Gestisci preferiti");
+            System.out.println("8. Modifica una tua recensione");
+            System.out.println("9. Cancella una tua recensione");
+            System.out.println("10. Logout");
             System.out.print("Scelta: ");
             String scelta = scanner.nextLine();
 
@@ -172,10 +173,23 @@ public class TheKnife {
                     }
                     break;
 
-
-
-
                 case "4":
+                    List<Ristorante> conDelivery = ristoranteManager.cercaConDelivery();
+
+                    if (conDelivery.isEmpty()) {
+                        System.out.println(" Nessun ristorante con delivery trovato.");
+                    } else {
+                        System.out.println(" Ristoranti che offrono delivery:");
+                        for (Ristorante r : conDelivery) {
+                            System.out.println("- " + r);
+                        }
+                    }
+                    break;
+
+
+
+
+                case "5":
                     List<Ristorante> ristorantiDisponibili = ristoranteManager.getTuttiIRistoranti();
 
                     System.out.println("Scegli il ristorante da recensire:");
@@ -210,7 +224,7 @@ public class TheKnife {
                     break;
 
 
-                case "5":
+                case "6":
                     List<Recensione> tutte = recensioneManager.getTutteLeRecensioni();
                     if (tutte.isEmpty()) {
                         System.out.println(" Nessuna recensione disponibile.");
@@ -224,7 +238,7 @@ public class TheKnife {
                     break;
 
 
-                case "6":
+                case "7":
                     boolean esciPreferiti = false;
                     while (!esciPreferiti) {
                         System.out.println("\n Gestione preferiti");
@@ -281,7 +295,7 @@ public class TheKnife {
                     }
                     break;
 
-                case "9":
+                case "10":
                     esci = true;
                     System.out.println("Logout effettuato.");
                     break;
@@ -290,7 +304,7 @@ public class TheKnife {
                     System.out.println("Scelta non valida.");
 
                     switch (scelta) {
-                        case "7": {
+                        case "8": {
                             List<Recensione> mie = getRecensioniUtente(utente, recensioneManager);
 
                             if (mie.isEmpty()) {
@@ -332,7 +346,7 @@ public class TheKnife {
                             break;
                         }
 
-                        case "8": {
+                        case "9": {
                             List<Recensione> mie = getRecensioniUtente(utente, recensioneManager);
 
                             if (mie.isEmpty()) {
@@ -436,7 +450,7 @@ public class TheKnife {
                     String tipoCucina = scanner.nextLine();
                     System.out.print("Fascia di prezzo (es. €, €€, €€€, $$$): ");
                     String fasciaPrezzo = scanner.nextLine();
-                    Ristorante nuovo = new Ristorante(nome, citta, stelle, tipoCucina,fasciaPrezzo);
+                    Ristorante nuovo = new Ristorante(nome, citta, stelle, tipoCucina,fasciaPrezzo,true);
                     ristoranteManager.aggiungiRistorante(nuovo);
                     System.out.println("Ristorante aggiunto con successo.");
                     break;
