@@ -5,6 +5,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 
 /**
  * Gestisce il caricamento e la ricerca dei ristoranti.
@@ -39,11 +41,12 @@ public class RistoranteManager {
                     String nome = campi[0].replace("\"", "").trim();
                     String citta = campi[2].replace("\"", "").trim();
                     String campoStelle = campi[11].replace("\"", "").trim();
+                    String tipoCucina = campi[4].replace("\"", "").trim();
 
                     int stelle = campoStelle.replaceAll("[^0-9]", "").isEmpty() ? 0 :
                             Integer.parseInt(campoStelle.replaceAll("[^0-9]", ""));
 
-                    Ristorante r = new Ristorante(nome, citta, stelle);
+                    Ristorante r = new Ristorante(nome, citta, stelle,tipoCucina );
                     System.out.println(" Caricato: " + r);
                     lista.add(r);
                 }
@@ -92,4 +95,12 @@ public class RistoranteManager {
     public List<Ristorante> getTuttiIRistoranti() {
         return ristoranti;
     }
+
+    public List<Ristorante> cercaPerTipoCucina(String tipo) {
+        return ristoranti.stream()
+                .filter(r -> r.getTipoCucina().equalsIgnoreCase(tipo))
+                .collect(Collectors.toList());
+    }
+
 }
+
