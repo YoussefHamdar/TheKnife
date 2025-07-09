@@ -5,14 +5,18 @@ public class Ristorante {
     private String citta;
     private int stelle;
     private String tipoCucina;
+    private String fasciaPrezzo;
 
 
-    public Ristorante(String nome, String citta, int stelle, String tipoCucina) {
+
+    public Ristorante(String nome, String citta, int stelle, String tipoCucina, String fasciaPrezzo) {
         this.nome = nome;
         this.citta = citta;
         this.stelle = stelle;
         this.tipoCucina = tipoCucina;
+        this.fasciaPrezzo = fasciaPrezzo;
     }
+
 
 
     public String getNome() {
@@ -30,6 +34,10 @@ public class Ristorante {
     public String getTipoCucina() {
         return tipoCucina;
     }
+    public String getFasciaPrezzo() {
+        return fasciaPrezzo;
+    }
+
 
 
     @Override
