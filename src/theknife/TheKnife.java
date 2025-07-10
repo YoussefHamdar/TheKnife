@@ -251,7 +251,8 @@ public class TheKnife {
             System.out.println("11. Gestisci preferiti");
             System.out.println("12. Modifica una tua recensione");
             System.out.println("13. Cancella una tua recensione");
-            System.out.println("14. Logout");
+            System.out.println("14. Visualizza ristoranti che hai recensito");
+            System.out.println("15. Logout");
             System.out.print("Scelta: ");
             String scelta = scanner.nextLine();
 
@@ -500,10 +501,6 @@ public class TheKnife {
                     }
                     break;
 
-                case "14":
-                    esci = true;
-                    System.out.println("Logout effettuato.");
-                    break;
 
                 default:
                     System.out.println("Scelta non valida.");
@@ -581,10 +578,26 @@ public class TheKnife {
                             break;
                         }
 
+                        case "14":
+                            List<Ristorante> recensiti = ristoranteManager.getRecensitiDa(utente.getUsername());
+                            if (recensiti.isEmpty()) {
+                                System.out.println(" Non hai ancora recensito alcun ristorante.");
+                            } else {
+                                System.out.println(" Ristoranti che hai recensito:");
+                                for (Ristorante r2 : recensiti) {
+                                    System.out.println("- " + r2.getNome() + " (" + r2.getCitta() + ")");
+                                }
+                            }
+                            break;
+
                         default:
                             System.out.println("Scelta non valida.");
                             break;
                     }
+                case "15":
+                    esci = true;
+                    System.out.println("Logout effettuato.");
+                    break;
             }
         }
     }
@@ -678,7 +691,13 @@ public class TheKnife {
                     System.out.print(" Inserisci indirizzo: ");
                     String indirizzo = scanner.nextLine();
 
-                    Ristorante nuovo = new Ristorante(nome, citta, stelle, tipoCucina, fasciaPrezzo, true, true, prezzoMedio, nazione, indirizzo);
+                    System.out.print("Inserisci latitudine (es. 45.95): ");
+                    double latitudine = Double.parseDouble(scanner.nextLine());
+
+                    System.out.print("Inserisci longitudine (es. 8.43): ");
+                    double longitudine = Double.parseDouble(scanner.nextLine());
+
+                    Ristorante nuovo = new Ristorante(nome, citta, stelle, tipoCucina, fasciaPrezzo, true, true, prezzoMedio, nazione, indirizzo,latitudine,longitudine);
 
                     ristoranteManager.aggiungiRistorante(nuovo);
                     System.out.println("Ristorante aggiunto con successo.");

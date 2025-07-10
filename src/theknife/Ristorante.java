@@ -79,6 +79,15 @@ public class Ristorante {
         recensioni.add(r);
     }
 
+    public boolean haRecensioneDellUtente(String username) {
+        for (Recensione r : recensioni) {
+            if (r.getAutore().equalsIgnoreCase(username)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
 
     public double getMediaStelle() {

@@ -196,6 +196,12 @@ public class RistoranteManager {
         System.out.println(" Descrizione: " + (r.getDescrizione() != null ? r.getDescrizione() : "Nessuna"));
     }
 
+    public List<Ristorante> getRecensitiDa(String username) {
+        return ristoranti.stream()
+                .filter(r -> r.haRecensioneDellUtente(username))
+                .collect(Collectors.toList());
+    }
+
 
 
 
