@@ -48,11 +48,29 @@ public class RistoranteManager {
                     boolean deliveryDisponibile = servizi.contains("delivery");
                     boolean prenotazioneOnlineDisponibile = servizi.contains("reservation") || servizi.contains("prenotazione");
 
+                    int prezzoMedio;
+                    switch (fasciaPrezzo.trim()) {
+                        case "€":
+                            prezzoMedio = 20;
+                            break;
+                        case "€€":
+                            prezzoMedio = 40;
+                            break;
+                        case "€€€":
+                            prezzoMedio = 70;
+                            break;
+                        case "$$$":
+                            prezzoMedio = 100;
+                            break;
+                        default:
+                            prezzoMedio = 0; // valore neutro se la fascia non è riconosciuta
+                    }
+
 
                     int stelle = campoStelle.replaceAll("[^0-9]", "").isEmpty() ? 0 :
                             Integer.parseInt(campoStelle.replaceAll("[^0-9]", ""));
 
-                    Ristorante r = new Ristorante(nome, citta, stelle, tipoCucina, fasciaPrezzo, deliveryDisponibile,prenotazioneOnlineDisponibile);
+                    Ristorante r = new Ristorante(nome, citta, stelle, tipoCucina, fasciaPrezzo, deliveryDisponibile,prenotazioneOnlineDisponibile, prezzoMedio);
 
                     System.out.println(" Caricato: " + r);
                     lista.add(r);
@@ -145,6 +163,28 @@ public class RistoranteManager {
                 .filter(r -> r.getMediaStelle() >= minStelle)
                 .collect(Collectors.toList());
     }
+    public Ristorante cercaPerNome(String nome) {
+        return ristoranti.stream()
+                .filter(r -> r.getNome().equalsIgnoreCase(nome))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public void visualizzaDettagli(Ristorante r) {
+        System.out.println(" Nome: " + r.getNome());
+        System.out.println(" Città: " + r.getCitta() + ", " + r.getNazione());
+        System.out.println(" Indirizzo: " + r.getIndirizzo());
+        System.out.printf(" Coordinate: %.5f, %.5f\n", r.getLatitudine(), r.getLongitudine());
+        System.out.println(" Prezzo medio: " + r.getPrezzoMedio() + "€  (" + r.getFasciaPrezzo() + ")");
+        System.out.println(" Cucina: " + r.getTipoCucina());
+        System.out.println(" Delivery: " + (r.isDeliveryDisponibile() ? " sì" : " no"));
+        System.out.println(" Prenotazione online: " + (r.isPrenotazioneOnlineDisponibile() ? " sì" : " no"));
+        System.out.println(" Stelle Michelin: " + r.getStelle());
+        System.out.printf(" Media recensioni: %.2f stelle\n", r.getMediaStelle());
+        System.out.println(" Descrizione: " + (r.getDescrizione() != null ? r.getDescrizione() : "Nessuna"));
+    }
+
+
 
 
 }

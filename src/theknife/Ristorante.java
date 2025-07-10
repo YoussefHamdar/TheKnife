@@ -11,13 +11,20 @@ public class Ristorante {
     private String fasciaPrezzo;
     private boolean deliveryDisponibile;
     private boolean prenotazioneOnlineDisponibile;
+    private String indirizzo;
+    private String nazione;
+    private double latitudine;
+    private double longitudine;
+    private int prezzoMedio;
+    private String descrizione;
+
 
     private List<Recensione> recensioni = new ArrayList<>();
 
 
 
 
-    public Ristorante(String nome, String citta, int stelle, String tipoCucina, String fasciaPrezzo,boolean deliveryDisponibile, boolean prenotazioneOnlineDisponibile) {
+    public Ristorante(String nome, String citta, int stelle, String tipoCucina, String fasciaPrezzo,boolean deliveryDisponibile, boolean prenotazioneOnlineDisponibile, int prezzoMedio) {
         this.nome = nome;
         this.citta = citta;
         this.stelle = stelle;
@@ -25,6 +32,8 @@ public class Ristorante {
         this.fasciaPrezzo = fasciaPrezzo;
         this.deliveryDisponibile = deliveryDisponibile;
         this.prenotazioneOnlineDisponibile = prenotazioneOnlineDisponibile;
+        this.prezzoMedio = prezzoMedio;
+
     }
 
     public String getNome() {
@@ -62,20 +71,7 @@ public class Ristorante {
         recensioni.add(r);
     }
 
-    public int getPrezzoMedio() {
-        switch (fasciaPrezzo.trim()) {
-            case "€":
-                return 1;
-            case "€€":
-                return 2;
-            case "€€€":
-                return 3;
-            case "$$$":
-                return 4;
-            default:
-                return 0; // valore neutro se fascia non riconosciuta
-        }
-    }
+
 
     public double getMediaStelle() {
         if (recensioni.isEmpty()) return 0;
@@ -85,6 +81,32 @@ public class Ristorante {
         }
         return somma / recensioni.size();
     }
+    public String getIndirizzo() {
+        return indirizzo;
+    }
+
+    public String getNazione() {
+        return nazione;
+    }
+
+    public double getLatitudine() {
+        return latitudine;
+    }
+
+    public double getLongitudine() {
+        return longitudine;
+    }
+
+    public int getPrezzoMedio() {
+        return prezzoMedio;
+    }
+
+    public String getDescrizione() {
+        return descrizione;
+    }
+
+
+
 
 
 

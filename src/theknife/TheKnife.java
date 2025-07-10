@@ -24,7 +24,8 @@ public class TheKnife {
             System.out.println("\n BENVENUTO SU THEKNIFE ");
             System.out.println("1. Registrati");
             System.out.println("2. Login");
-            System.out.println("3. Esci");
+            System.out.println("3. Accedi come ospite");
+            System.out.println("4. Esci");
             System.out.print("Scelta: ");
             String scelta = scanner.nextLine();
 
@@ -91,8 +92,12 @@ public class TheKnife {
                         System.out.println("Credenziali errate.");
                     }
                     break;
-
                 case "3":
+                    menuGuest(scanner, ristoranteManager, recensioneManager);
+                    break;
+
+
+                case "4":
                     esci = true;
                     System.out.println("Grazie per aver usato TheKnife!");
                     break;
@@ -104,6 +109,127 @@ public class TheKnife {
 
         scanner.close();
     }
+
+
+
+
+
+    /**
+     * Menù per ospite
+     */
+
+
+    public static void menuGuest(Scanner scanner, RistoranteManager ristoranteManager, RecensioneManager recensioneManager) {
+        boolean esci = false;
+
+        while (!esci) {
+            System.out.println("\n Menu ospite");
+            System.out.println("1. Cerca ristorante per nome");
+            System.out.println("2. Visualizza recensioni di un ristorante");
+            System.out.println("3. Filtra per città");
+            System.out.println("4. Filtra per tipo di cucina");
+            System.out.println("5. Filtra per fascia di prezzo");
+            System.out.println("6. Solo con delivery");
+            System.out.println("7. Solo con prenotazione online");
+            System.out.println("8. Filtra per stelle minime");
+            System.out.println("9. Ricerca combinata");
+            System.out.println("10. Esci");
+            System.out.print("Scelta: ");
+            String scelta = scanner.nextLine();
+
+            switch (scelta) {
+                case "1":
+                    System.out.print(" Inserisci nome ristorante: ");
+                    String nome = scanner.nextLine();
+                    Ristorante r = ristoranteManager.cercaPerNome(nome);
+                    if (r != null) {
+                        ristoranteManager.visualizzaDettagli(r);
+                    } else {
+                        System.out.println(" Ristorante non trovato.");
+                    }
+                    break;
+
+                case "2":
+                    System.out.print(" Inserisci nome ristorante: ");
+                    String nomeRec = scanner.nextLine();
+                    Ristorante risto = ristoranteManager.cercaPerNome(nomeRec);
+                    if (risto != null) {
+                        List<Recensione> recs = risto.getRecensioni();
+                        if (recs.isEmpty()) {
+                            System.out.println("Nessuna recensione disponibile.");
+                        } else {
+                            System.out.println(" Recensioni:");
+                            for (Recensione rec : recs) {
+                                System.out.println(rec);
+                                System.out.println("--------------------------------------------------");
+                            }
+                        }
+                    } else {
+                        System.out.println(" Ristorante non trovato.");
+                    }
+                    break;
+
+                case "3":
+                    System.out.print(" Inserisci città: ");
+                    String citta = scanner.nextLine();
+                    stampaLista(ristoranteManager.cercaPerCitta(citta));
+                    break;
+
+                case "4":
+                    System.out.print("Inserisci tipo cucina: ");
+                    String tipo = scanner.nextLine();
+                    stampaLista(ristoranteManager.cercaPerTipoCucina(tipo));
+                    break;
+
+                case "5":
+                    System.out.print(" Inserisci fascia di prezzo (€ / €€ / €€€ / $$$): ");
+                    String prezzo = scanner.nextLine();
+                    stampaLista(ristoranteManager.cercaPerFasciaPrezzo(prezzo));
+                    break;
+
+                case "6":
+                    stampaLista(ristoranteManager.cercaConDelivery());
+                    break;
+
+                case "7":
+                    stampaLista(ristoranteManager.cercaConPrenotazioneOnline());
+                    break;
+
+                case "8":
+                    System.out.print(" Inserisci numero minimo di stelle (es. 3.5): ");
+                    double minStelle = Double.parseDouble(scanner.nextLine());
+                    stampaLista(ristoranteManager.cercaPerMediaStelle(minStelle));
+                    break;
+
+                case "9":
+                    System.out.print(" Città: ");
+                    String city = scanner.nextLine();
+                    System.out.print(" Tipo cucina: ");
+                    String tipoCucina = scanner.nextLine();
+                    System.out.print(" Prezzo massimo: ");
+                    int maxPrezzo = Integer.parseInt(scanner.nextLine());
+                    System.out.print(" Delivery richiesto (sì/no): ");
+                    boolean delivery = scanner.nextLine().equalsIgnoreCase("sì");
+                    System.out.print(" Prenotazione online richiesta (sì/no): ");
+                    boolean prenotazione = scanner.nextLine().equalsIgnoreCase("sì");
+                    System.out.print(" Media stelle minima: ");
+                    double mediaMinima = Double.parseDouble(scanner.nextLine());
+
+                    List<Ristorante> risultati = ristoranteManager.cercaCombinata(city, tipoCucina, maxPrezzo, delivery, prenotazione, mediaMinima);
+                    stampaLista(risultati);
+                    break;
+
+                case "10":
+                    esci = true;
+                    System.out.println(" Uscita dal menu ospite.");
+                    break;
+
+                default:
+                    System.out.println(" Scelta non valida.");
+            }
+        }
+    }
+
 
     /**
      * Menù per utente normale
@@ -119,12 +245,13 @@ public class TheKnife {
             System.out.println("5. Cerca ristoranti con prenotazione online");
             System.out.println("6. Cerca ristoranti con media stelle");
             System.out.println("7. Ricerca avanzata (combinata)");
-            System.out.println("8. Aggiungi recensione");
-            System.out.println("9. Visualizza recensioni");
-            System.out.println("10. Gestisci preferiti");
-            System.out.println("11. Modifica una tua recensione");
-            System.out.println("12. Cancella una tua recensione");
-            System.out.println("13. Logout");
+            System.out.println("8. Visualizza dettagli ristorante");
+            System.out.println("9. Aggiungi recensione");
+            System.out.println("10. Visualizza recensioni");
+            System.out.println("11. Gestisci preferiti");
+            System.out.println("12. Modifica una tua recensione");
+            System.out.println("13. Cancella una tua recensione");
+            System.out.println("14. Logout");
             System.out.print("Scelta: ");
             String scelta = scanner.nextLine();
 
@@ -250,11 +377,24 @@ public class TheKnife {
                         }
                     }
                     break;
-
-
-
-
                 case "8":
+                    System.out.print("Inserisci nome ristorante: ");
+                    String nome = scanner.nextLine();
+
+                    Ristorante r = ristoranteManager.cercaPerNome(nome);
+
+                    if (r != null) {
+                        ristoranteManager.visualizzaDettagli(r);
+                    } else {
+                        System.out.println(" Ristorante non trovato.");
+                    }
+                    break;
+
+
+
+
+
+                case "9":
                     List<Ristorante> ristorantiDisponibili = ristoranteManager.getTuttiIRistoranti();
 
                     System.out.println("Scegli il ristorante da recensire:");
@@ -289,21 +429,21 @@ public class TheKnife {
                     break;
 
 
-                case "9":
+                case "10":
                     List<Recensione> tutte = recensioneManager.getTutteLeRecensioni();
                     if (tutte.isEmpty()) {
                         System.out.println(" Nessuna recensione disponibile.");
                     } else {
                         System.out.println(" Tutte le recensioni:\n");
-                        for (Recensione r : tutte) {
-                            System.out.println(r);
+                        for (Recensione rec : tutte) {
+                            System.out.println(rec);
                             System.out.println("--------------------------------------------------");
                         }
                     }
                     break;
 
 
-                case "10":
+                case "11":
                     boolean esciPreferiti = false;
                     while (!esciPreferiti) {
                         System.out.println("\n Gestione preferiti");
@@ -345,8 +485,8 @@ public class TheKnife {
                             }
                             case "3": {
                                 System.out.println("I tuoi ristoranti preferiti:");
-                                for (Ristorante r : utente.getPreferiti()) {
-                                    System.out.println("- " + r);
+                                for (Ristorante preferito : utente.getPreferiti()) {
+                                    System.out.println("- " + preferito);
                                 }
                                 break;
                             }
@@ -360,7 +500,7 @@ public class TheKnife {
                     }
                     break;
 
-                case "13":
+                case "14":
                     esci = true;
                     System.out.println("Logout effettuato.");
                     break;
@@ -369,7 +509,7 @@ public class TheKnife {
                     System.out.println("Scelta non valida.");
 
                     switch (scelta) {
-                        case "11": {
+                        case "12": {
                             List<Recensione> mie = getRecensioniUtente(utente, recensioneManager);
 
                             if (mie.isEmpty()) {
@@ -411,7 +551,7 @@ public class TheKnife {
                             break;
                         }
 
-                        case "12": {
+                        case "13": {
                             List<Recensione> mie = getRecensioniUtente(utente, recensioneManager);
 
                             if (mie.isEmpty()) {
@@ -515,7 +655,25 @@ public class TheKnife {
                     String tipoCucina = scanner.nextLine();
                     System.out.print("Fascia di prezzo (es. €, €€, €€€, $$$): ");
                     String fasciaPrezzo = scanner.nextLine();
-                    Ristorante nuovo = new Ristorante(nome, citta, stelle, tipoCucina,fasciaPrezzo,true,true);
+                    int prezzoMedio;
+                    switch (fasciaPrezzo.trim()) {
+                        case "€":
+                            prezzoMedio = 20;
+                            break;
+                        case "€€":
+                            prezzoMedio = 40;
+                            break;
+                        case "€€€":
+                            prezzoMedio = 70;
+                            break;
+                        case "$$$":
+                            prezzoMedio = 100;
+                            break;
+                        default:
+                            prezzoMedio = 0;
+                    }
+
+                    Ristorante nuovo = new Ristorante(nome, citta, stelle, tipoCucina,fasciaPrezzo,true,true, prezzoMedio);
                     ristoranteManager.aggiungiRistorante(nuovo);
                     System.out.println("Ristorante aggiunto con successo.");
                     break;
@@ -531,4 +689,15 @@ public class TheKnife {
             }
         }
     }
+    private static void stampaLista(List<Ristorante> lista) {
+        if (lista.isEmpty()) {
+            System.out.println(" Nessun ristorante trovato.");
+        } else {
+            System.out.println("Ristoranti trovati:");
+            for (Ristorante r : lista) {
+                System.out.println("- " + r);
+            }
+        }
+    }
+
 }
