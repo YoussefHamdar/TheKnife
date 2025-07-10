@@ -19,12 +19,13 @@ public class Ristorante {
     private String descrizione;
 
 
+
     private List<Recensione> recensioni = new ArrayList<>();
 
 
 
 
-    public Ristorante(String nome, String citta, int stelle, String tipoCucina, String fasciaPrezzo,boolean deliveryDisponibile, boolean prenotazioneOnlineDisponibile, int prezzoMedio) {
+    public Ristorante(String nome, String citta, int stelle, String tipoCucina, String fasciaPrezzo, boolean deliveryDisponibile, boolean prenotazioneOnlineDisponibile, int prezzoMedio, String nazione, String indirizzo, double latitudine, double longitudine) {
         this.nome = nome;
         this.citta = citta;
         this.stelle = stelle;
@@ -33,8 +34,15 @@ public class Ristorante {
         this.deliveryDisponibile = deliveryDisponibile;
         this.prenotazioneOnlineDisponibile = prenotazioneOnlineDisponibile;
         this.prezzoMedio = prezzoMedio;
-
+        this.nazione = nazione;
+        this.indirizzo = indirizzo;
+        this.latitudine = latitudine;
+        this.longitudine = longitudine;
     }
+
+
+
+
 
     public String getNome() {
         return nome;

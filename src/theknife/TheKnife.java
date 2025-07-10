@@ -672,8 +672,14 @@ public class TheKnife {
                         default:
                             prezzoMedio = 0;
                     }
+                    System.out.print(" Inserisci nazione: ");
+                    String nazione = scanner.nextLine();
 
-                    Ristorante nuovo = new Ristorante(nome, citta, stelle, tipoCucina,fasciaPrezzo,true,true, prezzoMedio);
+                    System.out.print(" Inserisci indirizzo: ");
+                    String indirizzo = scanner.nextLine();
+
+                    Ristorante nuovo = new Ristorante(nome, citta, stelle, tipoCucina, fasciaPrezzo, true, true, prezzoMedio, nazione, indirizzo);
+
                     ristoranteManager.aggiungiRistorante(nuovo);
                     System.out.println("Ristorante aggiunto con successo.");
                     break;

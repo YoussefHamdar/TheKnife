@@ -66,11 +66,23 @@ public class RistoranteManager {
                             prezzoMedio = 0; // valore neutro se la fascia non è riconosciuta
                     }
 
-
                     int stelle = campoStelle.replaceAll("[^0-9]", "").isEmpty() ? 0 :
                             Integer.parseInt(campoStelle.replaceAll("[^0-9]", ""));
+                    String location = campi[2].replace("\"", "").trim();
+                    String nazione = location.substring(location.lastIndexOf(",") + 1).trim();
+                    String indirizzo = campi[1].replace("\"", "").trim(); // Colonna "Address"
 
-                    Ristorante r = new Ristorante(nome, citta, stelle, tipoCucina, fasciaPrezzo, deliveryDisponibile,prenotazioneOnlineDisponibile, prezzoMedio);
+                    double longitudine = Double.parseDouble(campi[5]);
+                    double latitudine = Double.parseDouble(campi[6]);
+
+
+                    Ristorante r = new Ristorante(
+                            nome, citta, stelle, tipoCucina, fasciaPrezzo,
+                            deliveryDisponibile, prenotazioneOnlineDisponibile,
+                            prezzoMedio, nazione, indirizzo, latitudine, longitudine
+                    );
+
+
 
                     System.out.println(" Caricato: " + r);
                     lista.add(r);
