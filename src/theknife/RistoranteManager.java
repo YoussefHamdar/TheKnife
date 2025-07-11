@@ -208,9 +208,9 @@ public class RistoranteManager {
     public void salvaSuFile(String path) {
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(path))) {
             out.writeObject(ristoranti);
-            System.out.println("✅ Ristoranti salvati su file.");
+            System.out.println(" Ristoranti salvati su file.");
         } catch (IOException e) {
-            System.err.println("❌ Errore salvataggio ristoranti: " + e.getMessage());
+            System.err.println(" Errore salvataggio ristoranti: " + e.getMessage());
         }
     }
 
@@ -221,16 +221,16 @@ public class RistoranteManager {
     public void caricaDaFile(String path) {
         File file = new File(path);
         if (!file.exists()) {
-            System.out.println("📁 Nessun file ristoranti trovato, lista vuota creata.");
+            System.out.println(" Nessun file ristoranti trovato, lista vuota creata.");
             ristoranti = new ArrayList<>();
             return;
         }
 
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))) {
             ristoranti = (List<Ristorante>) in.readObject();
-            System.out.println("✅ Ristoranti caricati da file.");
+            System.out.println(" Ristoranti caricati da file.");
         } catch (IOException | ClassNotFoundException e) {
-            System.err.println("❌ Errore caricamento ristoranti: " + e.getMessage());
+            System.err.println(" Errore caricamento ristoranti: " + e.getMessage());
             ristoranti = new ArrayList<>();
         }
     }
