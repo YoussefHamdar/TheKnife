@@ -3,6 +3,7 @@ package theknife;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.*;
 
 /**
  * Gestisce l'elenco delle recensioni e le operazioni associate.
@@ -73,4 +74,28 @@ public class RecensioneManager {
         }
         return (double) somma / recensioni.size();
     }
+
+    public void salvaSuFile(String path) {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(path))) {
+            out.writeObject(recensioni);
+            System.out.println("Recensioni salvate su file.");
+        } catch (IOException e) {
+            System.err.println("Errore nel salvataggio recensioni: " + e.getMessage());
+        }
+    }
+    @SuppressWarnings("unchecked")
+    public void caricaDaFile(String path) {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(path))) {
+            recensioni = (List<Recensione>) in.readObject();
+            System.out.println("Recensioni caricate da file.");
+        } catch (IOException | ClassNotFoundException e) {
+            System.err.println("Errore nel caricamento recensioni: " + e.getMessage());
+            recensioni = new ArrayList<>(); // fallback
+        }
+    }
+
+
+
+
+
 }

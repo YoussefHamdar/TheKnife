@@ -3,11 +3,14 @@ package theknife;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDate;
+import java.io.Serializable;
+public class Utente implements Serializable {
+    private static final long serialVersionUID = 1L;
 /**
  * Rappresenta un utente registrato nell'app.
  * Contiene nome, username, password cifrata e preferiti.
  */
-public class Utente {
+
 
     private String nome;
     private String username;

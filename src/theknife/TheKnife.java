@@ -1,9 +1,10 @@
 package theknife;
-
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 import java.time.LocalDate;
+import java.io.File;
+
 
 /**
  * Classe principale dell'app TheKnife.
@@ -14,8 +15,32 @@ public class TheKnife {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         GestioneUtenti gestioneUtenti = new GestioneUtenti();
+        gestioneUtenti.caricaDaFile("data/utenti.dat");
+        gestioneUtenti.salvaSuFile("data/utenti.dat"); // <-- li salva nel file binario
+
+
         RistoranteManager ristoranteManager = new RistoranteManager(); // da CSV
+
+
+        File fileRisto = new File("data/ristoranti.dat");
+        if (fileRisto.exists()) {
+            ristoranteManager.caricaDaFile("data/ristoranti.dat"); //  già salvato in precedenza
+        } else {
+            // ⬇ Prima volta → carica dal CSV
+            List<Ristorante> iniziali = RistoranteManager.caricaDaCSV("data/michelin_my_maps.csv");
+            for (Ristorante r : iniziali) {
+                ristoranteManager.aggiungiRistorante(r);
+            }
+            ristoranteManager.salvaSuFile("data/ristoranti.dat");
+            System.out.println(" Ristoranti iniziali caricati dal CSV e salvati nel .dat.");
+        }
+
+
+
+
         RecensioneManager recensioneManager = new RecensioneManager();
+        recensioneManager.caricaDaFile("data/recensioni.dat");
+
 
         Utente utenteLoggato = null;
         boolean esci = false;
@@ -63,7 +88,11 @@ public class TheKnife {
                     boolean ok = gestioneUtenti.registraUtente(
                             nome, cognome, username, password,
                             isRistoratore, domicilio, dataDiNascita
+
+
+
                     );
+                    gestioneUtenti.salvaSuFile("data/utenti.dat");
 
                     break;
 
@@ -82,9 +111,10 @@ public class TheKnife {
                             System.out.println("Login riuscito. Ciao, " + u.getNome() + "!");
 
                             if (u.isRistoratore()) {
-                                menuRistoratore(u, scanner, recensioneManager, ristoranteManager);
+                                menuRistoratore(u, scanner, recensioneManager, ristoranteManager, gestioneUtenti);
                             } else {
-                                menuUtente(u, scanner, recensioneManager, ristoranteManager);
+                                menuUtente(u, scanner, recensioneManager, ristoranteManager, gestioneUtenti);
+
                             }
                         }
 
@@ -98,6 +128,7 @@ public class TheKnife {
 
 
                 case "4":
+                    gestioneUtenti.salvaSuFile("data/utenti.dat");
                     esci = true;
                     System.out.println("Grazie per aver usato TheKnife!");
                     break;
@@ -234,8 +265,10 @@ public class TheKnife {
     /**
      * Menù per utente normale
      */
-    public static void menuUtente(Utente utente, Scanner scanner, RecensioneManager recensioneManager, RistoranteManager ristoranteManager) {
+
+    public static void menuUtente(Utente utente, Scanner scanner, RecensioneManager recensioneManager, RistoranteManager ristoranteManager, GestioneUtenti gestioneUtenti) {
         boolean esci = false;
+
         while (!esci) {
             System.out.println("\n Menù utente (" + utente.getUsername() + ")");
             System.out.println("1. Cerca ristoranti per città");
@@ -422,6 +455,8 @@ public class TheKnife {
                                 testo,
                                 stelle
                         );
+                        recensioneManager.salvaSuFile("data/recensioni.dat");
+
 
                         System.out.println(" Recensione salvata per " + scelto.getNome());
                     } else {
@@ -535,6 +570,8 @@ public class TheKnife {
 
                                     if (nuoveStelle >= 1 && nuoveStelle <= 5) {
                                         recensioneManager.modificaRecensione(daModificare, nuovoTesto, nuoveStelle);
+                                        recensioneManager.salvaSuFile("data/recensioni.dat");
+
                                         System.out.println(" Recensione aggiornata.");
                                     } else {
                                         System.out.println(" Numero di stelle non valido.");
@@ -568,6 +605,8 @@ public class TheKnife {
                                 if (sceltaElimina >= 0 && sceltaElimina < mie.size()) {
                                     System.out.println("Recensione eliminata:\n" + mie.get(sceltaElimina));
                                     recensioneManager.rimuoviRecensione(mie.get(sceltaElimina));
+                                    recensioneManager.salvaSuFile("data/recensioni.dat");
+
                                     System.out.println(" Recensione rimossa con successo.");
                                 } else {
                                     System.out.println(" Scelta non valida.");
@@ -595,6 +634,8 @@ public class TheKnife {
                             break;
                     }
                 case "15":
+                    gestioneUtenti.salvaSuFile("data/utenti.dat");
+
                     esci = true;
                     System.out.println("Logout effettuato.");
                     break;
@@ -610,7 +651,8 @@ public class TheKnife {
     /**
      * Menù per ristoratore
      */
-    public static void menuRistoratore(Utente ristoratore, Scanner scanner, RecensioneManager recensioneManager, RistoranteManager ristoranteManager)
+    public static void menuRistoratore(Utente ristoratore, Scanner scanner, RecensioneManager recensioneManager, RistoranteManager ristoranteManager, GestioneUtenti gestioneUtenti)
+
     {
         boolean esci = false;
         while (!esci) {
@@ -700,11 +742,18 @@ public class TheKnife {
                     Ristorante nuovo = new Ristorante(nome, citta, stelle, tipoCucina, fasciaPrezzo, true, true, prezzoMedio, nazione, indirizzo,latitudine,longitudine);
 
                     ristoranteManager.aggiungiRistorante(nuovo);
+                    ristoranteManager.salvaSuFile("data/ristoranti.dat");
+
+
+
                     System.out.println("Ristorante aggiunto con successo.");
                     break;
 
                 case "4":
+                    gestioneUtenti.salvaSuFile("data/utenti.dat");
+                    ristoranteManager.salvaSuFile("data/ristoranti.dat");
                     esci = true;
+
                     System.out.println("Logout effettuato.");
                     break;
 

@@ -1,11 +1,16 @@
 package theknife;
 
 import java.time.LocalDate;
+import java.io.Serializable;
+
+
 
 /**
  * Rappresenta una recensione lasciata da un utente su un ristorante.
  */
-public class Recensione {
+public class Recensione implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private String autore;
     private String nomeRistorante;
     private String testo;

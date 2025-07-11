@@ -1,8 +1,19 @@
 package theknife;
+import theknife.Utente;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDate;
+import java.security.MessageDigest;
+import java.nio.charset.StandardCharsets;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.FileInputStream;
+import java.io.File;
 
 
 /**
@@ -11,6 +22,8 @@ import java.time.LocalDate;
 public class GestioneUtenti {
 
     private List<Utente> utenti;
+
+
 
     public GestioneUtenti() {
         this.utenti = new ArrayList<>();
@@ -31,7 +44,8 @@ public class GestioneUtenti {
             }
         }
 
-        String passwordCifrata = cifra(password);
+        String passwordCifrata = cifraPassword(password);
+
         Utente nuovo = new Utente(nome, cognome, username, passwordCifrata, isRistoratore, domicilio, dataDiNascita);
         utenti.add(nuovo);
         return true;
@@ -94,4 +108,82 @@ public class GestioneUtenti {
     public List<Utente> getTuttiGliUtenti() {
         return utenti;
     }
+
+
+
+    public void caricaDaCSV(String percorso) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(percorso))) {
+            String riga = reader.readLine(); // salta intestazione
+            while ((riga = reader.readLine()) != null) {
+                String[] campi = riga.split(",");
+
+                if (campi.length < 7) continue;
+
+                String nome = campi[0].trim();
+                String cognome = campi[1].trim();
+                String username = campi[2].trim();
+                String password = cifraPassword(campi[3].trim());
+                // usa metodo già esistente
+                String domicilio = campi[4].trim();
+                LocalDate nascita = null;
+                try {
+                    nascita = LocalDate.parse(campi[5].trim());
+                } catch (Exception e) {
+                    nascita = null; // facoltativa
+                }
+                boolean isRistoratore = campi[6].trim().equalsIgnoreCase("ristoratore");
+
+                Utente u = new Utente(nome, cognome, username, password, isRistoratore, domicilio, nascita);
+                utenti.add(u); // <-- CAMBIATO da listaUtenti
+            }
+            System.out.println(" Utenti caricati da CSV.");
+        } catch (IOException e) {
+            System.err.println("" + e.getMessage());
+        }
+    }
+
+
+    public String cifraPassword(String password) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
+            StringBuilder hex = new StringBuilder();
+            for (byte b : hash) hex.append(String.format("%02x", b));
+            return hex.toString();
+        } catch (Exception e) {
+            return password; // fallback
+        }
+    }
+
+
+
+public void salvaSuFile(String path) {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(path))) {
+            out.writeObject(utenti); //  usa la variabile corretta
+            System.out.println(" Utenti salvati su file.");
+        } catch (IOException e) {
+            System.err.println("Errore salvataggio utenti: " + e.getMessage());
+        }
+    }
+
+
+
+    @SuppressWarnings("unchecked")
+    public void caricaDaFile(String path) {
+        File file = new File(path);
+        if (!file.exists()) {
+            System.out.println(" Nessun file utenti trovato, lista vuota creata.");
+            utenti = new ArrayList<>(); //  assegna alla variabile corretta
+            return;
+        }
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))) {
+            utenti = (List<Utente>) in.readObject(); //  correggi qui
+            System.out.println("Utenti caricati da file.");
+        } catch (IOException | ClassNotFoundException e) {
+            System.err.println("Errore caricamento utenti: " + e.getMessage());
+            utenti = new ArrayList<>();
+        }
+    }
+
+
 }
