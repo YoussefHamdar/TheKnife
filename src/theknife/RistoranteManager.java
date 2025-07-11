@@ -8,10 +8,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.io.*;
 
-
 /**
- * Gestisce il caricamento e la ricerca dei ristoranti.
+ * Gestore dei ristoranti nell'app TheKnife.
+ * Permette di caricare, cercare, aggiungere, visualizzare
+ * e salvare ristoranti, con vari filtri e operazioni.
  */
+
 public class RistoranteManager {
 
     private List<Ristorante> ristoranti = new ArrayList<>();
@@ -133,32 +135,79 @@ public class RistoranteManager {
     public List<Ristorante> getTuttiIRistoranti() {
         return ristoranti;
     }
+    /**
+     * Cerca ristoranti in base al tipo di cucina.
+     *
+     * @param tipo tipo di cucina (es. Italiana)
+     * @return lista filtrata
+     */
 
     public List<Ristorante> cercaPerTipoCucina(String tipo) {
         return ristoranti.stream()
                 .filter(r -> r.getTipoCucina().equalsIgnoreCase(tipo))
                 .collect(Collectors.toList());
     }
+    /**
+     * Cerca ristoranti per fascia di prezzo (€, €€, €€€, $$$).
+     *
+     * @param prezzo fascia scelta
+     * @return lista filtrata
+     */
+
     public List<Ristorante> cercaPerFasciaPrezzo(String prezzo) {
         return ristoranti.stream()
                 .filter(r -> r.getFasciaPrezzo().equalsIgnoreCase(prezzo))
                 .collect(Collectors.toList());
     }
+
+    /**
+     * Restituisce i ristoranti con servizio delivery.
+     *
+     * @return lista filtrata
+     */
+
     public List<Ristorante> cercaConDelivery() {
         return ristoranti.stream()
                 .filter(Ristorante::isDeliveryDisponibile)
                 .collect(Collectors.toList());
     }
+
+    /**
+     * Restituisce i ristoranti con prenotazione online disponibile.
+     *
+     * @return lista filtrata
+     */
+
     public List<Ristorante> cercaConPrenotazioneOnline() {
         return ristoranti.stream()
                 .filter(Ristorante::isPrenotazioneOnlineDisponibile)
                 .collect(Collectors.toList());
     }
+    /**
+     * Filtra i ristoranti con una media recensioni superiore o uguale a una soglia.
+     *
+     * @param minimo soglia minima
+     * @return lista filtrata
+     */
+
     public List<Ristorante> cercaPerMediaStelle(double minimo) {
         return ristoranti.stream()
                 .filter(r -> r.getMediaStelle() >= minimo)
                 .collect(Collectors.toList());
     }
+
+    /**
+     * Ricerca avanzata che combina più criteri.
+     *
+     * @param citta città da cercare
+     * @param tipoCucina tipo cucina desiderata
+     * @param prezzoMax prezzo massimo accettato
+     * @param requireDelivery true se si vuole delivery
+     * @param requirePrenotazioneOnline true se si vuole prenotazione online
+     * @param minStelle soglia minima di media recensioni
+     * @return lista filtrata
+     */
+
     public List<Ristorante> cercaCombinata(
             String citta,
             String tipoCucina,
@@ -176,12 +225,26 @@ public class RistoranteManager {
                 .filter(r -> r.getMediaStelle() >= minStelle)
                 .collect(Collectors.toList());
     }
+
+    /**
+     * Cerca un ristorante esatto per nome.
+     *
+     * @param nome nome del ristorante
+     * @return ristorante trovato oppure null
+     */
+
     public Ristorante cercaPerNome(String nome) {
         return ristoranti.stream()
                 .filter(r -> r.getNome().equalsIgnoreCase(nome))
                 .findFirst()
                 .orElse(null);
     }
+
+    /**
+     * Stampa tutti i dettagli di un ristorante.
+     *
+     * @param r ristorante da visualizzare
+     */
 
     public void visualizzaDettagli(Ristorante r) {
         System.out.println(" Nome: " + r.getNome());
@@ -197,12 +260,25 @@ public class RistoranteManager {
         System.out.println(" Descrizione: " + (r.getDescrizione() != null ? r.getDescrizione() : "Nessuna"));
     }
 
+    /**
+     * Restituisce la lista di ristoranti recensiti da un utente.
+     *
+     * @param username autore delle recensioni
+     * @return lista di ristoranti
+     */
+
     public List<Ristorante> getRecensitiDa(String username) {
         return ristoranti.stream()
                 .filter(r -> r.haRecensioneDellUtente(username))
                 .collect(Collectors.toList());
     }
 
+
+    /**
+     * Salva tutti i ristoranti su file binario (.dat).
+     *
+     * @param path percorso file di destinazione
+     */
 
 
     public void salvaSuFile(String path) {
@@ -216,6 +292,12 @@ public class RistoranteManager {
 
 
 
+    /**
+     * Carica la lista dei ristoranti da file binario (.dat).
+     * Se il file non esiste, inizializza la lista come vuota.
+     *
+     * @param path percorso file
+     */
 
     @SuppressWarnings("unchecked")
     public void caricaDaFile(String path) {

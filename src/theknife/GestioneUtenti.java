@@ -19,24 +19,41 @@ import java.io.File;
 /**
  * Gestisce la registrazione e il login degli utenti.
  */
+/**
+ * Classe che gestisce le operazioni sugli utenti.
+ * Include funzionalità di registrazione, login, salvataggio su file,
+ * caricamento da file o CSV, e cifratura password.
+ */
+
 public class GestioneUtenti {
 
     private List<Utente> utenti;
 
 
 
+    /**
+     * Costruttore base: inizializza la lista utenti vuota.
+     */
+
     public GestioneUtenti() {
         this.utenti = new ArrayList<>();
     }
 
     /**
-     * Registra un nuovo utente.
+
+    /**
+     * Registra un nuovo utente se lo username è disponibile.
      *
-     * @param nome nome completo
-     * @param username username unico
-     * @param password password in chiaro
-     * @return true se registrazione avvenuta con successo
+     * @param nome           nome dell'utente
+     * @param cognome        cognome dell'utente
+     * @param username       username univoco
+     * @param password       password da cifrare
+     * @param isRistoratore  true se l'utente è un ristoratore
+     * @param domicilio      domicilio dell'utente
+     * @param dataDiNascita  data di nascita (facoltativa)
+     * @return true se la registrazione è avvenuta con successo
      */
+
     public boolean registraUtente(String nome, String cognome, String username, String password, boolean isRistoratore, String domicilio, LocalDate dataDiNascita) {
         for (Utente u : utenti) {
             if (u.getUsername().equals(username)) {
@@ -84,32 +101,45 @@ public class GestioneUtenti {
     }
 
     /**
-     * Metodo fittizio di cifratura per la password (solo a scopo dimostrativo).
-     * In un progetto reale andrebbe usato un hash sicuro come SHA-256 o bcrypt.
+     * Esegue una cifratura semplice invertendo la stringa.
+     * Solo a scopo dimostrativo.
      *
-     * @param password password in chiaro
-     * @return password cifrata
+     * @param password in chiaro
+     * @return stringa cifrata
      */
+
     private String cifra(String password) {
         return new StringBuilder(password).reverse().toString(); // es. "ciao" → "oaic"
     }
 
     /**
-     * Verifica se una password inserita corrisponde a quella cifrata salvata.
+     * Verifica se la password in chiaro corrisponde alla cifrata salvata.
      *
      * @param password password in chiaro
      * @param cifrata password cifrata salvata
-     * @return true se corrispondono
+     * @return true se combaciano
      */
+
     private boolean verificaPassword(String password, String cifrata) {
         return cifra(password).equals(cifrata);
     }
+    /**
+     * Ritorna la lista completa degli utenti registrati.
+     *
+     * @return lista utenti
+     */
 
     public List<Utente> getTuttiGliUtenti() {
         return utenti;
     }
 
 
+    /**
+     * Carica utenti da un file CSV.
+     * Ignora intestazioni e salta righe non valide.
+     *
+     * @param percorso path del file CSV
+     */
 
     public void caricaDaCSV(String percorso) {
         try (BufferedReader reader = new BufferedReader(new FileReader(percorso))) {
@@ -141,6 +171,12 @@ public class GestioneUtenti {
             System.err.println("" + e.getMessage());
         }
     }
+    /**
+     * Applica l'hash SHA-256 alla password.
+     *
+     * @param password password da cifrare
+     * @return password cifrata in esadecimale
+     */
 
 
     public String cifraPassword(String password) {
@@ -155,6 +191,11 @@ public class GestioneUtenti {
         }
     }
 
+    /**
+     * Salva la lista degli utenti su file binario (.dat).
+     *
+     * @param path percorso del file
+     */
 
 
 public void salvaSuFile(String path) {
@@ -167,6 +208,12 @@ public void salvaSuFile(String path) {
     }
 
 
+    /**
+     * Carica la lista utenti da un file binario (.dat).
+     * Se il file non esiste, crea lista vuota.
+     *
+     * @param path percorso del file da caricare
+     */
 
     @SuppressWarnings("unchecked")
     public void caricaDaFile(String path) {

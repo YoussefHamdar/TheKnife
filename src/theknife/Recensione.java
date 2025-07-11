@@ -10,13 +10,42 @@ import java.io.Serializable;
  */
 public class Recensione implements Serializable {
     private static final long serialVersionUID = 1L;
+    /**
+     * Restituisce il nome o username dell'autore.
+     * @return autore della recensione
+     */
 
     private String autore;
+    /**
+     * Restituisce il nome del ristorante recensito.
+     * @return nome ristorante
+     */
+
     private String nomeRistorante;
     private String testo;
+    /**
+     * Restituisce il contenuto testuale della recensione.
+     * @return testo della recensione
+     */
+
     private int stelle;
+    /**
+     * Restituisce il numero di stelle assegnate.
+     * @return valore da 1 a 5
+     */
+
     private LocalDate data;
+    /**
+     * Restituisce la data in cui è stata scritta la recensione.
+     * @return data della recensione
+     */
+
     private String rispostaDelRistoratore;
+    /**
+     * Restituisce la risposta data dal ristoratore, se presente.
+     * @return testo della risposta o null se assente
+     */
+
 
     /**
      * Costruttore base della recensione.
@@ -42,17 +71,35 @@ public class Recensione implements Serializable {
     public LocalDate getData() { return data; }
     public String getRispostaDelRistoratore() { return rispostaDelRistoratore; }
 
-    public void setTesto(String nuovoTesto) {
+    /**
+     * Modifica il testo della recensione.
+     * @param nuovoTesto testo aggiornato
+     */
+
+        public void setTesto(String nuovoTesto) {
         this.testo = nuovoTesto;
     }
+    /**
+     * Modifica il numero di stelle assegnato.
+     * @param nuoveStelle valore aggiornato
+     */
 
     public void setStelle(int nuoveStelle) {
         this.stelle = nuoveStelle;
     }
+    /**
+     * Aggiunge o modifica la risposta del ristoratore.
+     * @param risposta testo della risposta
+     */
 
     public void setRispostaDelRistoratore(String risposta) {
         this.rispostaDelRistoratore = risposta;
     }
+    /**
+     * Restituisce la recensione in formato testuale leggibile.
+     * Include eventuale risposta del ristoratore.
+     * @return stringa descrittiva
+     */
 
     @Override
     public String toString() {

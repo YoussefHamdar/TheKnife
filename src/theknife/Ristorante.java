@@ -3,6 +3,12 @@ package theknife;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.Serializable;
+/**
+ * Rappresenta un ristorante registrato nell'app TheKnife.
+ * Contiene dati anagrafici, tipo cucina, coordinate geografiche,
+ * recensioni associate e servizi disponibili.
+ */
+
 
 public class Ristorante implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -27,6 +33,22 @@ public class Ristorante implements Serializable {
 
     private List<Recensione> recensioni = new ArrayList<>();
 
+    /**
+     * Costruttore completo per creare un ristorante.
+     *
+     * @param nome nome del ristorante
+     * @param citta città in cui si trova
+     * @param stelle valutazione interna
+     * @param tipoCucina tipo di cucina offerta
+     * @param fasciaPrezzo indicatore economico (€–$$$)
+     * @param deliveryDisponibile true se offre consegna
+     * @param prenotazioneOnlineDisponibile true se prenotabile online
+     * @param prezzoMedio costo medio
+     * @param nazione paese del ristorante
+     * @param indirizzo via e numero civico
+     * @param latitudine coordinata GPS
+     * @param longitudine coordinata GPS
+     */
 
 
 
@@ -75,14 +97,33 @@ public class Ristorante implements Serializable {
     public boolean isPrenotazioneOnlineDisponibile() {
         return prenotazioneOnlineDisponibile;
     }
+    /**
+     * Restituisce la lista delle recensioni ricevute.
+     *
+     * @return lista di oggetti Recensione
+     */
+
 
     public List<Recensione> getRecensioni() {
         return recensioni;
     }
+    /**
+     * Aggiunge una nuova recensione al ristorante.
+     *
+     * @param r recensione da aggiungere
+     */
+
 
     public void aggiungiRecensione(Recensione r) {
         recensioni.add(r);
     }
+    /**
+     * Verifica se l'utente ha già recensito questo ristorante.
+     *
+     * @param username autore della recensione
+     * @return true se ha già recensito
+     */
+
 
     public boolean haRecensioneDellUtente(String username) {
         for (Recensione r : recensioni) {
@@ -93,6 +134,11 @@ public class Ristorante implements Serializable {
         return false;
     }
 
+    /**
+     * Calcola la media delle stelle ricevute da tutte le recensioni.
+     *
+     * @return valore medio (0 se nessuna recensione)
+     */
 
 
     public double getMediaStelle() {
@@ -130,6 +176,12 @@ public class Ristorante implements Serializable {
 
 
 
+    /**
+     * Ritorna una rappresentazione testuale del ristorante.
+     * Include nome, città, stelle, media recensioni e servizi.
+     *
+     * @return stringa descrittiva
+     */
 
 
     @Override

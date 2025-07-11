@@ -6,14 +6,15 @@ import java.util.List;
 import java.io.*;
 
 /**
- * Gestisce l'elenco delle recensioni e le operazioni associate.
+ * Classe che gestisce le recensioni degli utenti.
+ * Permette di aggiungere, modificare, rimuovere, calcolare medie,
+ * e salvare/caricare recensioni su file.
  */
+
 public class RecensioneManager {
     private List<Recensione> recensioni;
 
-    /**
-     * Costruttore: inizializza la lista di recensioni.
-     */
+    /** * Costruttore: inizializza la lista di recensioni. */
     public RecensioneManager() {
         this.recensioni = new ArrayList<>();
     }
@@ -74,6 +75,11 @@ public class RecensioneManager {
         }
         return (double) somma / recensioni.size();
     }
+    /**
+     * Salva tutte le recensioni su file binario (.dat).
+     *
+     * @param path percorso del file di destinazione
+     */
 
     public void salvaSuFile(String path) {
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(path))) {
@@ -83,6 +89,14 @@ public class RecensioneManager {
             System.err.println("Errore nel salvataggio recensioni: " + e.getMessage());
         }
     }
+
+    /**
+     * Carica le recensioni da un file binario (.dat).
+     * In caso di errore, inizializza una lista vuota.
+     *
+     * @param path percorso del file da caricare
+     */
+
     @SuppressWarnings("unchecked")
     public void caricaDaFile(String path) {
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(path))) {
