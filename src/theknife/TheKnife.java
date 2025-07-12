@@ -11,6 +11,12 @@ import java.io.File;
  * Gestisce registrazione, login e i menù utente e ristoratore.
  */
 public class TheKnife {
+    /**
+     * Metodo principale di avvio dell'applicazione.
+     * Inizializza gestori, carica dati, mostra il menù iniziale.
+     *
+     * @param args argomenti da riga di comando (non utilizzati)
+     */
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -146,7 +152,12 @@ public class TheKnife {
 
 
     /**
-     * Menù per ospite
+     * Menù interattivo per utenti ospiti (non registrati).
+     * Permette ricerche su ristoranti e visualizzazione recensioni pubbliche.
+     *
+     * @param scanner Scanner per input utente
+     * @param ristoranteManager Gestore dei ristoranti
+     * @param recensioneManager Gestore delle recensioni
      */
 
 
@@ -263,7 +274,14 @@ public class TheKnife {
 
 
     /**
-     * Menù per utente normale
+     * Menù interattivo per utenti registrati non ristoratori.
+     * Include ricerche, gestione recensioni e preferiti, e logout.
+     *
+     * @param utente Utente loggato
+     * @param scanner Scanner per input
+     * @param recensioneManager Gestore delle recensioni
+     * @param ristoranteManager Gestore dei ristoranti
+     * @param gestioneUtenti Gestore degli utenti (usato per salvataggio al logout)
      */
 
     public static void menuUtente(Utente utente, Scanner scanner, RecensioneManager recensioneManager, RistoranteManager ristoranteManager, GestioneUtenti gestioneUtenti) {
@@ -649,8 +667,17 @@ public class TheKnife {
     }
 
     /**
-     * Menù per ristoratore
+     * Menù interattivo per utenti con ruolo ristoratore.
+     * Permette di visualizzare e rispondere alle recensioni,
+     * aggiungere un nuovo ristorante e salvare i dati al logout.
+     *
+     * @param ristoratore utente ristoratore loggato
+     * @param scanner scanner per input
+     * @param recensioneManager gestore delle recensioni
+     * @param ristoranteManager gestore dei ristoranti
+     * @param gestioneUtenti gestore utenti (per salvataggio al logout)
      */
+
     public static void menuRistoratore(Utente ristoratore, Scanner scanner, RecensioneManager recensioneManager, RistoranteManager ristoranteManager, GestioneUtenti gestioneUtenti)
 
     {
@@ -763,6 +790,12 @@ public class TheKnife {
             }
         }
     }
+    /**
+     * Stampa a video un elenco di ristoranti.
+     *
+     * @param lista lista di ristoranti da mostrare
+     */
+
     private static void stampaLista(List<Ristorante> lista) {
         if (lista.isEmpty()) {
             System.out.println(" Nessun ristorante trovato.");
