@@ -100,17 +100,6 @@ public class GestioneUtenti {
         return null;
     }
 
-    /**
-     * Esegue una cifratura semplice invertendo la stringa.
-     * Solo a scopo dimostrativo.
-     *
-     * @param password in chiaro
-     * @return stringa cifrata
-     */
-
-    private String cifra(String password) {
-        return new StringBuilder(password).reverse().toString(); // es. "ciao" → "oaic"
-    }
 
     /**
      * Verifica se la password in chiaro corrisponde alla cifrata salvata.
@@ -119,10 +108,10 @@ public class GestioneUtenti {
      * @param cifrata password cifrata salvata
      * @return true se combaciano
      */
-
     private boolean verificaPassword(String password, String cifrata) {
-        return cifra(password).equals(cifrata);
+        return cifraPassword(password).equals(cifrata);
     }
+
     /**
      * Ritorna la lista completa degli utenti registrati.
      *
