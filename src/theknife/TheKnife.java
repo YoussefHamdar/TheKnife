@@ -27,19 +27,34 @@ public class TheKnife {
 
         RistoranteManager ristoranteManager = new RistoranteManager(); // da CSV
 
-
         File fileRisto = new File("data/ristoranti.dat");
+
         if (fileRisto.exists()) {
-            ristoranteManager.caricaDaFile("data/ristoranti.dat"); //  già salvato in precedenza
+            ristoranteManager.caricaDaFile("data/ristoranti.dat");
+
+            // Se il file esiste ma è vuoto  rigenera
+            if (ristoranteManager.getTuttiIRistoranti().isEmpty()) {
+                System.out.println(" File .dat presente ma vuoto. Rigenero da CSV...");
+                List<Ristorante> iniziali = RistoranteManager.caricaDaCSV("data/michelin_my_maps.csv");
+                for (Ristorante r : iniziali) {
+                    ristoranteManager.aggiungiRistorante(r);
+                }
+                ristoranteManager.salvaSuFile("data/ristoranti.dat");
+                System.out.println(" Ristoranti rigenerati da CSV.");
+            }
+
         } else {
-            // ⬇ Prima volta → carica dal CSV
+            // File non esiste prima esecuzione
+            System.out.println(" Nessun file .dat trovato. Carico da CSV...");
             List<Ristorante> iniziali = RistoranteManager.caricaDaCSV("data/michelin_my_maps.csv");
             for (Ristorante r : iniziali) {
                 ristoranteManager.aggiungiRistorante(r);
             }
             ristoranteManager.salvaSuFile("data/ristoranti.dat");
-            System.out.println(" Ristoranti iniziali caricati dal CSV e salvati nel .dat.");
+            System.out.println(" Ristoranti iniziali salvati.");
         }
+
+
 
 
 
@@ -735,25 +750,36 @@ public class TheKnife {
                     int stelle = Integer.parseInt(scanner.nextLine());
                     System.out.print("Tipo cucina (es. Giapponese, Italiana, Messicana): ");
                     String tipoCucina = scanner.nextLine();
-                    System.out.print("Fascia di prezzo (es. €, €€, €€€, $$$): ");
-                    String fasciaPrezzo = scanner.nextLine();
+                    System.out.print("Fascia di prezzo (€, €€, €€€, $$$ oppure $, $$, $$$$,€€€€): ");
+                    String fasciaPrezzo = scanner.nextLine().trim();
                     int prezzoMedio;
-                    switch (fasciaPrezzo.trim()) {
+
+                    switch (fasciaPrezzo) {
                         case "€":
+                        case "$":
                             prezzoMedio = 20;
                             break;
+
                         case "€€":
+                        case "$$":
                             prezzoMedio = 40;
                             break;
+
                         case "€€€":
+                        case "$$$":
                             prezzoMedio = 70;
                             break;
-                        case "$$$":
+
+                        case "€€€€":
+                        case "$$$$":
                             prezzoMedio = 100;
                             break;
+
                         default:
-                            prezzoMedio = 0;
+                            System.out.println(" Fascia non riconosciuta. Uso valore di default.");
+                            prezzoMedio = 50;
                     }
+
                     System.out.print(" Inserisci nazione: ");
                     String nazione = scanner.nextLine();
 
@@ -766,7 +792,13 @@ public class TheKnife {
                     System.out.print("Inserisci longitudine (es. 8.43): ");
                     double longitudine = Double.parseDouble(scanner.nextLine());
 
-                    Ristorante nuovo = new Ristorante(nome, citta, stelle, tipoCucina, fasciaPrezzo, true, true, prezzoMedio, nazione, indirizzo,latitudine,longitudine);
+                    System.out.print("Offre delivery? (true/false): ");
+                    boolean deliveryDisponibile = Boolean.parseBoolean(scanner.nextLine().trim());
+
+                    System.out.print("Offre prenotazione online? (true/false): ");
+                    boolean prenotazioneOnlineDisponibile = Boolean.parseBoolean(scanner.nextLine().trim());
+
+                    Ristorante nuovo = new Ristorante(nome, citta, stelle, tipoCucina, fasciaPrezzo, deliveryDisponibile, prenotazioneOnlineDisponibile, prezzoMedio, nazione, indirizzo, latitudine, longitudine);
 
                     ristoranteManager.aggiungiRistorante(nuovo);
                     ristoranteManager.salvaSuFile("data/ristoranti.dat");
