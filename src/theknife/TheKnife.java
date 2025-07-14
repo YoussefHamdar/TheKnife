@@ -61,6 +61,8 @@ public class TheKnife {
 
         RecensioneManager recensioneManager = new RecensioneManager();
         recensioneManager.caricaDaFile("data/recensioni.dat");
+        // Associa le recensioni ai ristoranti caricati
+        recensioneManager.associaRecensioni(ristoranteManager.getTuttiIRistoranti());
 
 
         Utente utenteLoggato = null;
@@ -213,11 +215,11 @@ public class TheKnife {
                     if (risto != null) {
                         List<Recensione> recs = risto.getRecensioni();
                         if (recs.isEmpty()) {
-                            System.out.println("Nessuna recensione disponibile.");
+                            System.out.println(" Nessuna recensione disponibile.");
                         } else {
-                            System.out.println(" Recensioni:");
+                            System.out.println(" Recensioni anonime:");
                             for (Recensione rec : recs) {
-                                System.out.println(rec);
+                                System.out.printf("⭐ %.1f ★ — \"%s\"\n", (float) rec.getStelle(), rec.getTesto());
                                 System.out.println("--------------------------------------------------");
                             }
                         }
@@ -225,6 +227,7 @@ public class TheKnife {
                         System.out.println(" Ristorante non trovato.");
                     }
                     break;
+
 
                 case "3":
                     System.out.print(" Inserisci città: ");
@@ -570,10 +573,7 @@ public class TheKnife {
                     break;
 
 
-                default:
-                    System.out.println("Scelta non valida.");
 
-                    switch (scelta) {
                         case "12": {
                             List<Recensione> mie = getRecensioniUtente(utente, recensioneManager);
 
@@ -661,17 +661,17 @@ public class TheKnife {
                                 }
                             }
                             break;
+                        case "15":
+                            gestioneUtenti.salvaSuFile("data/utenti.dat");
 
+                            esci = true;
+                            System.out.println("Logout effettuato.");
+                            break;
                         default:
                             System.out.println("Scelta non valida.");
                             break;
-                    }
-                case "15":
-                    gestioneUtenti.salvaSuFile("data/utenti.dat");
 
-                    esci = true;
-                    System.out.println("Logout effettuato.");
-                    break;
+
             }
         }
     }

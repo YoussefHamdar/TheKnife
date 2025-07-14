@@ -108,6 +108,18 @@ public class RecensioneManager {
         }
     }
 
+    public void associaRecensioni(List<Ristorante> ristoranti) {
+        for (Recensione recensione : recensioni) {
+            for (Ristorante r : ristoranti) {
+                if (r.getNome().equalsIgnoreCase(recensione.getNomeRistorante())) {
+                    r.aggiungiRecensione(recensione);
+                    break;
+                }
+            }
+        }
+    }
+
+
 
 
 
