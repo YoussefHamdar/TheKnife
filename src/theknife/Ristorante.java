@@ -28,6 +28,8 @@ public class Ristorante implements Serializable {
     private double longitudine;
     private int prezzoMedio;
     private String descrizione;
+    private String gestore; // username del ristoratore che lo ha inserito
+
 
 
 
@@ -52,7 +54,7 @@ public class Ristorante implements Serializable {
 
 
 
-    public Ristorante(String nome, String citta, int stelle, String tipoCucina, String fasciaPrezzo, boolean deliveryDisponibile, boolean prenotazioneOnlineDisponibile, int prezzoMedio, String nazione, String indirizzo, double latitudine, double longitudine) {
+    public Ristorante(String nome, String citta, int stelle, String tipoCucina, String fasciaPrezzo, boolean deliveryDisponibile, boolean prenotazioneOnlineDisponibile, int prezzoMedio, String nazione, String indirizzo, double latitudine, double longitudine, String gestore) {
         this.nome = nome;
         this.citta = citta;
         this.stelle = stelle;
@@ -65,6 +67,7 @@ public class Ristorante implements Serializable {
         this.indirizzo = indirizzo;
         this.latitudine = latitudine;
         this.longitudine = longitudine;
+        this.gestore=gestore;
     }
 
 
@@ -172,6 +175,12 @@ public class Ristorante implements Serializable {
     public String getDescrizione() {
         return descrizione;
     }
+
+    public String getGestore() {
+        return gestore;
+    }
+
+
 
 
 

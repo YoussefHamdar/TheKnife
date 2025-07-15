@@ -79,10 +79,13 @@ public class RistoranteManager {
                     double latitudine = Double.parseDouble(campi[6]);
 
 
+
                     Ristorante r = new Ristorante(
-                            nome, citta, stelle, tipoCucina, fasciaPrezzo,
-                            deliveryDisponibile, prenotazioneOnlineDisponibile,
-                            prezzoMedio, nazione, indirizzo, latitudine, longitudine
+                            nome, citta, stelle, tipoCucina, fasciaPrezzo, deliveryDisponibile,
+                            prenotazioneOnlineDisponibile, prezzoMedio, nazione,
+                            indirizzo, latitudine, longitudine,
+                            "import_michelin"
+                            // questo ristorante è stato importato automaticamente dal dataset” Questi ristoranti non appariranno nel menu dei ristoratori, perché non hanno un gestore reale.
                     );
 
 
@@ -289,6 +292,13 @@ public class RistoranteManager {
             System.err.println(" Errore salvataggio ristoranti: " + e.getMessage());
         }
     }
+
+    public List<Ristorante> getRistorantiGestitiDa(String username) {
+        return ristoranti.stream()
+                .filter(r -> username.equalsIgnoreCase(r.getGestore()))
+                .collect(Collectors.toList());
+    }
+
 
 
 

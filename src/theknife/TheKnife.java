@@ -4,6 +4,8 @@ import java.util.Scanner;
 import java.util.stream.Collectors;
 import java.time.LocalDate;
 import java.io.File;
+import theknife.*;
+
 
 
 /**
@@ -702,16 +704,41 @@ public class TheKnife {
             System.out.println("1. Visualizza recensioni");
             System.out.println("2. Rispondi a una recensione");
             System.out.println("3. Aggiungi ristorante");
-            System.out.println("4. Logout");
+            System.out.println("4. Visualizza valutazione media e numero di recensioni");
+            System.out.println("5. Logout");
             System.out.print("Scelta: ");
             String scelta = scanner.nextLine();
 
             switch (scelta) {
                 case "1":
-                    List<Recensione> lista = recensioneManager.getTutteLeRecensioni();
-                    for (int i = 0; i < lista.size(); i++) {
-                        System.out.println(i + ". " + lista.get(i) + "\n");
+                    List<Ristorante> gestiti = ristoranteManager.getRistorantiGestitiDa(ristoratore.getUsername());
+
+                    if (gestiti.isEmpty()) {
+                        System.out.println("Non gestisci ancora alcun ristorante.");
+                    } else {
+                        for (Ristorante r : gestiti) {
+                            System.out.println(" Ristorante: " + r.getNome());
+                            System.out.printf(" Media stelle: %.2f\n", r.getMediaStelle());
+                            System.out.println(" Numero recensioni: " + r.getRecensioni().size());
+                            System.out.println("-----------------------------------");
+
+                            List<Recensione> recs = r.getRecensioni();
+                            if (recs.isEmpty()) {
+                                System.out.println(" Nessuna recensione disponibile.\n");
+                            } else {
+                                for (Recensione rec : recs) {
+                                    System.out.printf("- %s (%d) [%s]\n", rec.getAutore(), rec.getStelle(), rec.getData());
+                                    System.out.println("  \"" + rec.getTesto() + "\"");
+                                    if (rec.getRispostaDelRistoratore() != null) {
+                                        System.out.println("  Risposta: " + rec.getRispostaDelRistoratore());
+                                    }
+                                    System.out.println();
+                                }
+                            }
+                            System.out.println();
+                        }
                     }
+
                     break;
 
                 case "2": {
@@ -797,8 +824,11 @@ public class TheKnife {
 
                     System.out.print("Offre prenotazione online? (true/false): ");
                     boolean prenotazioneOnlineDisponibile = Boolean.parseBoolean(scanner.nextLine().trim());
-
-                    Ristorante nuovo = new Ristorante(nome, citta, stelle, tipoCucina, fasciaPrezzo, deliveryDisponibile, prenotazioneOnlineDisponibile, prezzoMedio, nazione, indirizzo, latitudine, longitudine);
+                    Ristorante nuovo = new Ristorante(nome, citta, stelle, tipoCucina, fasciaPrezzo,
+                            deliveryDisponibile, prenotazioneOnlineDisponibile, prezzoMedio,
+                            nazione, indirizzo, latitudine, longitudine,
+                            ristoratore.getUsername()  // ← username del gestore
+                    );
 
                     ristoranteManager.aggiungiRistorante(nuovo);
                     ristoranteManager.salvaSuFile("data/ristoranti.dat");
@@ -809,6 +839,18 @@ public class TheKnife {
                     break;
 
                 case "4":
+                    List<Ristorante> miei = ristoranteManager.getRistorantiGestitiDa(ristoratore.getUsername());
+
+                    for (Ristorante r : miei) {
+                        System.out.println("" + r.getNome());
+                        System.out.printf(" Media stelle: %.2f\n", r.getMediaStelle());
+                        System.out.println(" Numero recensioni: " + r.getRecensioni().size());
+                    }
+
+                    break;
+
+
+                case "5":
                     gestioneUtenti.salvaSuFile("data/utenti.dat");
                     ristoranteManager.salvaSuFile("data/ristoranti.dat");
                     esci = true;
