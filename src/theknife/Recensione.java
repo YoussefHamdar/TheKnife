@@ -1,3 +1,8 @@
+/**
+ * Autori:
+ * - Hamdar Youssef (Matricola: 753832) – Sede: Como
+ * - Dellatorre Federico (Matricola: 755856) – Sede: Como
+ */
 package theknife;
 
 import java.time.LocalDate;
