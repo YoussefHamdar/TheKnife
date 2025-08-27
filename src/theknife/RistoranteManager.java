@@ -24,10 +24,12 @@ public class RistoranteManager {
     private List<Ristorante> ristoranti = new ArrayList<>();
 
     /**
-     * Costruttore: carica i ristoranti da un file CSV.
+     * Costruttore: inizializza la lista ristoranti vuota.
+     * Il caricamento dei dati avviene esplicitamente da main(),
+     * leggendo dal file .dat o dal CSV solo quando necessario.
      */
     public RistoranteManager() {
-        this.ristoranti = caricaDaCSV("data/michelin_my_maps.csv"); // puoi cambiare il nome file se serve
+        this.ristoranti = new ArrayList<>();
     }
 
     /**

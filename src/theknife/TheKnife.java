@@ -9,8 +9,6 @@ import java.util.Scanner;
 import java.util.stream.Collectors;
 import java.time.LocalDate;
 import java.io.File;
-import theknife.*;
-
 
 
 /**
@@ -34,31 +32,28 @@ public class TheKnife {
 
         RistoranteManager ristoranteManager = new RistoranteManager(); // da CSV
 
-        File fileRisto = new File("data/ristoranti.dat");
+        File fileRisto = new File("data/ristoranti_backup.dat");
 
         if (fileRisto.exists()) {
-            ristoranteManager.caricaDaFile("data/ristoranti.dat");
+            // Carica direttamente il .dat se esiste
+            ristoranteManager.caricaDaFile("data/ristoranti_backup.dat");
 
-            // Se il file esiste ma è vuoto  rigenera
+            // Caso raro: file presente ma vuoto → rigeneriamo da CSV
             if (ristoranteManager.getTuttiIRistoranti().isEmpty()) {
-                System.out.println(" File .dat presente ma vuoto. Rigenero da CSV...");
                 List<Ristorante> iniziali = RistoranteManager.caricaDaCSV("data/michelin_my_maps.csv");
                 for (Ristorante r : iniziali) {
                     ristoranteManager.aggiungiRistorante(r);
                 }
-                ristoranteManager.salvaSuFile("data/ristoranti.dat");
-                System.out.println(" Ristoranti rigenerati da CSV.");
+                ristoranteManager.salvaSuFile("data/ristoranti_backup.dat");
             }
 
         } else {
-            // File non esiste prima esecuzione
-            System.out.println(" Nessun file .dat trovato. Carico da CSV...");
+            // Prima esecuzione: creo il .dat dal CSV
             List<Ristorante> iniziali = RistoranteManager.caricaDaCSV("data/michelin_my_maps.csv");
             for (Ristorante r : iniziali) {
                 ristoranteManager.aggiungiRistorante(r);
             }
-            ristoranteManager.salvaSuFile("data/ristoranti.dat");
-            System.out.println(" Ristoranti iniziali salvati.");
+            ristoranteManager.salvaSuFile("data/ristoranti_backup.dat");
         }
 
 
@@ -68,6 +63,7 @@ public class TheKnife {
 
         RecensioneManager recensioneManager = new RecensioneManager();
         recensioneManager.caricaDaFile("data/recensioni.dat");
+
         // Associa le recensioni ai ristoranti caricati
         recensioneManager.associaRecensioni(ristoranteManager.getTuttiIRistoranti());
 
@@ -264,25 +260,52 @@ public class TheKnife {
 
                 case "8":
                     System.out.print(" Inserisci numero minimo di stelle (es. 3.5): ");
-                    double minStelle = Double.parseDouble(scanner.nextLine());
+
+                    double minStelle = 0; // PROTEZIONE INPUT
+                    try {
+                        minStelle = Double.parseDouble(scanner.nextLine());
+                    } catch (NumberFormatException e) {
+                        System.out.println(" Valore non valido, imposto 0.");
+                        minStelle = 0;
+                    }
+
                     stampaLista(ristoranteManager.cercaPerMediaStelle(minStelle));
                     break;
 
                 case "9":
                     System.out.print(" Città: ");
                     String city = scanner.nextLine();
+
                     System.out.print(" Tipo cucina: ");
                     String tipoCucina = scanner.nextLine();
-                    System.out.print(" Prezzo massimo: ");
-                    int maxPrezzo = Integer.parseInt(scanner.nextLine());
+
+                    // PROTEZIONE INPUT per maxPrezzo
+                    int maxPrezzo = Integer.MAX_VALUE;
+                    try {
+                        System.out.print(" Prezzo massimo: ");
+                        maxPrezzo = Integer.parseInt(scanner.nextLine());
+                    } catch (NumberFormatException e) {
+                        System.out.println(" Prezzo non valido, imposto nessun limite.");
+                    }
+
                     System.out.print(" Delivery richiesto (sì/no): ");
                     boolean delivery = scanner.nextLine().equalsIgnoreCase("sì");
+
                     System.out.print(" Prenotazione online richiesta (sì/no): ");
                     boolean prenotazione = scanner.nextLine().equalsIgnoreCase("sì");
-                    System.out.print(" Media stelle minima: ");
-                    double mediaMinima = Double.parseDouble(scanner.nextLine());
 
-                    List<Ristorante> risultati = ristoranteManager.cercaCombinata(city, tipoCucina, maxPrezzo, delivery, prenotazione, mediaMinima);
+                    // PROTEZIONE INPUT per mediaMinima
+                    double mediaMinima = 0;
+                    try {
+                        System.out.print(" Media stelle minima: ");
+                        mediaMinima = Double.parseDouble(scanner.nextLine());
+                    } catch (NumberFormatException e) {
+                        System.out.println(" Valore non valido, imposto 0.");
+                    }
+
+                    List<Ristorante> risultati = ristoranteManager.cercaCombinata(
+                            city, tipoCucina, maxPrezzo, delivery, prenotazione, mediaMinima
+                    );
                     stampaLista(risultati);
                     break;
 
@@ -408,7 +431,13 @@ public class TheKnife {
 
                 case "6":
                     System.out.print("Inserisci minimo stelle (es. 3.5): ");
-                    double minStelle = Double.parseDouble(scanner.nextLine());
+                    // PROTEZIONE INPUT minimo stelle
+                    double minStelle = 0;
+                    try {
+                        minStelle = Double.parseDouble(scanner.nextLine());
+                    } catch (NumberFormatException e) {
+                        System.out.println(" Valore non valido, imposto 0.");
+                    }
 
                     List<Ristorante> filtratiMedia = ristoranteManager.cercaPerMediaStelle(minStelle);
 
@@ -430,7 +459,14 @@ public class TheKnife {
                     String tipo = scanner.nextLine();
 
                     System.out.print("Prezzo massimo: ");
-                    int prezzoMax = Integer.parseInt(scanner.nextLine());
+                    // PROTEZIONE INPUT prezzo massimo
+                    int prezzoMax = Integer.MAX_VALUE;
+                    try {
+                        prezzoMax = Integer.parseInt(scanner.nextLine());
+                    } catch (NumberFormatException e) {
+                        System.out.println(" Prezzo non valido, imposto nessun limite.");
+                    }
+
 
                     System.out.print("Richiedi delivery? (sì/no): ");
                     boolean delivery = scanner.nextLine().equalsIgnoreCase("sì");
@@ -439,7 +475,14 @@ public class TheKnife {
                     boolean prenotazione = scanner.nextLine().equalsIgnoreCase("sì");
 
                     System.out.print("Media stelle minima: ");
-                    double minMediaStelle = Double.parseDouble(scanner.nextLine());
+                    // PROTEZIONE INPUT media stelle minima
+                    double minMediaStelle = 0;
+                    try {
+                        minMediaStelle = Double.parseDouble(scanner.nextLine());
+                    } catch (NumberFormatException e) {
+                        System.out.println(" Valore non valido, imposto 0.");
+                    }
+
 
                     List<Ristorante> ristorantiFiltrati = ristoranteManager.cercaCombinata(
                             citta, tipo, prezzoMax, delivery, prenotazione, minMediaStelle
@@ -480,7 +523,14 @@ public class TheKnife {
                     }
 
                     System.out.print("Numero ristorante: ");
-                    int index = Integer.parseInt(scanner.nextLine());
+                    // PROTEZIONE INPUT indice ristorante
+                    int index = -1;
+                    try {
+                        index = Integer.parseInt(scanner.nextLine());
+                    } catch (NumberFormatException e) {
+                        System.out.println(" Valore non valido.");
+                    }
+
 
                     if (index >= 0 && index < ristorantiDisponibili.size()) {
                         Ristorante scelto = ristorantiDisponibili.get(index);
@@ -490,7 +540,14 @@ public class TheKnife {
                         String testo = scanner.nextLine();
 
                         System.out.print("Quante stelle (1–5): ");
-                        int stelle = Integer.parseInt(scanner.nextLine());
+                        // PROTEZIONE INPUT stelle recensione
+                        int stelle = 0;
+                        try {
+                            stelle = Integer.parseInt(scanner.nextLine());
+                        } catch (NumberFormatException e) {
+                            System.out.println(" Valore non valido, imposto 0 stelle.");
+                        }
+
 
                         recensioneManager.aggiungiRecensione(
                                 utente.getUsername(),
@@ -542,7 +599,14 @@ public class TheKnife {
                                     System.out.println(i + ". " + elenco.get(i));
                                 }
                                 System.out.print("Numero da aggiungere: ");
-                                int indexAggiungi = Integer.parseInt(scanner.nextLine());
+                                // PROTEZIONE INPUT indice aggiunta preferito
+                                int indexAggiungi = -1;
+                                try {
+                                    indexAggiungi = Integer.parseInt(scanner.nextLine());
+                                } catch (NumberFormatException e) {
+                                    System.out.println(" Valore non valido.");
+                                }
+
                                 if (indexAggiungi >= 0 && indexAggiungi < elenco.size()) {
                                     utente.aggiungiPreferito(elenco.get(indexAggiungi));
                                     System.out.println("Ristorante aggiunto ai preferiti.");
@@ -555,7 +619,14 @@ public class TheKnife {
                                     System.out.println(i + ". " + pref.get(i));
                                 }
                                 System.out.print("Numero da rimuovere: ");
-                                int indexRimuovi = Integer.parseInt(scanner.nextLine());
+                                // PROTEZIONE INPUT indice rimozione preferito
+                                int indexRimuovi = -1;
+                                try {
+                                    indexRimuovi = Integer.parseInt(scanner.nextLine());
+                                } catch (NumberFormatException e) {
+                                    System.out.println(" Valore non valido.");
+                                }
+
                                 if (indexRimuovi >= 0 && indexRimuovi < pref.size()) {
                                     utente.rimuoviPreferito(pref.get(indexRimuovi));
                                     System.out.println("Ristorante rimosso dai preferiti.");
@@ -759,7 +830,14 @@ public class TheKnife {
                     }
 
                     System.out.print("Numero della recensione: ");
-                    int index = Integer.parseInt(scanner.nextLine());
+                    // PROTEZIONE INPUT indice recensione
+                    int index = -1;
+                    try {
+                        index = Integer.parseInt(scanner.nextLine());
+                    } catch (NumberFormatException e) {
+                        System.out.println(" Numero non valido.");
+                    }
+
 
                     if (index >= 0 && index < tutte.size()) {
                         System.out.print("Scrivi la risposta: ");
@@ -779,7 +857,16 @@ public class TheKnife {
                     System.out.print("Città: ");
                     String citta = scanner.nextLine();
                     System.out.print("Numero stelle (1–5): ");
-                    int stelle = Integer.parseInt(scanner.nextLine());
+                    // PROTEZIONE INPUT stelle ristorante
+                    int stelle = 0;
+                    try {
+                        stelle = Integer.parseInt(scanner.nextLine());
+                    } catch (NumberFormatException e) {
+                        System.out.println(" Valore non valido, imposto 0.");
+                    }
+
+
+
                     System.out.print("Tipo cucina (es. Giapponese, Italiana, Messicana): ");
                     String tipoCucina = scanner.nextLine();
                     System.out.print("Fascia di prezzo (€, €€, €€€, $$$ oppure $, $$, $$$$,€€€€): ");
@@ -819,10 +906,22 @@ public class TheKnife {
                     String indirizzo = scanner.nextLine();
 
                     System.out.print("Inserisci latitudine (es. 45.95): ");
-                    double latitudine = Double.parseDouble(scanner.nextLine());
+                    // PROTEZIONE INPUT latitudine
+                    double latitudine = 0;
+                    try {
+                        latitudine = Double.parseDouble(scanner.nextLine());
+                    } catch (NumberFormatException e) {
+                        System.out.println(" Latitudine non valida, imposto 0.");
+                    }
 
                     System.out.print("Inserisci longitudine (es. 8.43): ");
-                    double longitudine = Double.parseDouble(scanner.nextLine());
+                    // PROTEZIONE INPUT longitudine
+                    double longitudine = 0;
+                    try {
+                        longitudine = Double.parseDouble(scanner.nextLine());
+                    } catch (NumberFormatException e) {
+                        System.out.println(" Longitudine non valida, imposto 0.");
+                    }
 
                     System.out.print("Offre delivery? (true/false): ");
                     boolean deliveryDisponibile = Boolean.parseBoolean(scanner.nextLine().trim());
@@ -836,7 +935,7 @@ public class TheKnife {
                     );
 
                     ristoranteManager.aggiungiRistorante(nuovo);
-                    ristoranteManager.salvaSuFile("data/ristoranti.dat");
+                    ristoranteManager.salvaSuFile("data/ristoranti_backup.dat");
 
 
 
@@ -857,7 +956,7 @@ public class TheKnife {
 
                 case "5":
                     gestioneUtenti.salvaSuFile("data/utenti.dat");
-                    ristoranteManager.salvaSuFile("data/ristoranti.dat");
+                    ristoranteManager.salvaSuFile("data/ristoranti_backup.dat");
                     esci = true;
 
                     System.out.println("Logout effettuato.");
