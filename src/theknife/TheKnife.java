@@ -245,7 +245,7 @@ public class TheKnife {
                     break;
 
                 case "5":
-                    System.out.print(" Inserisci fascia di prezzo (€ / €€ / €€€ / $$$): ");
+                    System.out.print(" Inserisci fascia di prezzo (€, €€, €€€, $$$ oppure $, $$, $$$$,€€€€): ");
                     String prezzo = scanner.nextLine();
                     stampaLista(ristoranteManager.cercaPerFasciaPrezzo(prezzo));
                     break;
@@ -404,7 +404,7 @@ public class TheKnife {
                     }
                     break;
                 case "4":
-                    System.out.print("Inserisci fascia prezzo (es. €, €€, €€€, $$$): ");
+                    System.out.print("Inserisci fascia prezzo (€, €€, €€€, $$$ oppure $, $$, $$$$,€€€€): ");
                     String prezzo = scanner.nextLine().trim();
 
                     List<Ristorante> filtrati = ristoranteManager.cercaPerFasciaPrezzo(prezzo);
