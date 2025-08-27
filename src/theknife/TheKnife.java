@@ -337,26 +337,42 @@ public class TheKnife {
 
         while (!esci) {
             System.out.println("\n Menù utente (" + utente.getUsername() + ")");
-            System.out.println("1. Cerca ristoranti per città");
-            System.out.println("2. Cerca ristoranti per tipo cucina");
-            System.out.println("3. Cerca per fascia di prezzo");
-            System.out.println("4. Cerca ristoranti con servizio delivery");
-            System.out.println("5. Cerca ristoranti con prenotazione online");
-            System.out.println("6. Cerca ristoranti con media stelle");
-            System.out.println("7. Ricerca avanzata (combinata)");
-            System.out.println("8. Visualizza dettagli ristorante");
-            System.out.println("9. Aggiungi recensione");
-            System.out.println("10. Visualizza recensioni");
-            System.out.println("11. Gestisci preferiti");
-            System.out.println("12. Modifica una tua recensione");
-            System.out.println("13. Cancella una tua recensione");
-            System.out.println("14. Visualizza ristoranti che hai recensito");
-            System.out.println("15. Logout");
+            System.out.println("1. Cerca ristorante per nome");
+            System.out.println("2. Cerca ristoranti per città");
+            System.out.println("3. Cerca ristoranti per tipo cucina");
+            System.out.println("4. Cerca per fascia di prezzo");
+            System.out.println("5. Cerca ristoranti con servizio delivery");
+            System.out.println("6. Cerca ristoranti con prenotazione online");
+            System.out.println("7. Cerca ristoranti con media stelle");
+            System.out.println("8. Ricerca avanzata (combinata)");
+            System.out.println("9. Visualizza dettagli ristorante");
+            System.out.println("10. Aggiungi recensione");
+            System.out.println("11. Visualizza recensioni");
+            System.out.println("12. Gestisci preferiti");
+            System.out.println("13. Modifica una tua recensione");
+            System.out.println("14. Cancella una tua recensione");
+            System.out.println("15. Visualizza ristoranti che hai recensito");
+            System.out.println("16. Logout");
+
             System.out.print("Scelta: ");
             String scelta = scanner.nextLine();
 
             switch (scelta) {
+
                 case "1":
+                    System.out.print("Inserisci il nome del ristorante: ");
+                    String nomeDaCercare = scanner.nextLine();
+
+                    Ristorante rNome = ristoranteManager.cercaPerNome(nomeDaCercare);
+
+                    if (rNome != null) {
+                        ristoranteManager.visualizzaDettagli(rNome);
+                    } else {
+                        System.out.println("Nessun ristorante trovato con quel nome.");
+                    }
+                    break;
+
+                case "2":
                     System.out.print("Inserisci città: ");
                     String cittaInput = scanner.nextLine().trim(); // elimina spazi extra
 
@@ -373,7 +389,7 @@ public class TheKnife {
 
                     System.out.println(); // spazio per tornare al menù
                     break;
-                case "2":
+                case "3":
                     System.out.print("Inserisci tipo di cucina: ");
                     String tipoCucinaInput = scanner.nextLine().trim();
                     List<Ristorante> risultati = ristoranteManager.cercaPerTipoCucina(tipoCucinaInput);
@@ -387,7 +403,7 @@ public class TheKnife {
                         }
                     }
                     break;
-                case "3":
+                case "4":
                     System.out.print("Inserisci fascia prezzo (es. €, €€, €€€, $$$): ");
                     String prezzo = scanner.nextLine().trim();
 
@@ -403,7 +419,7 @@ public class TheKnife {
                     }
                     break;
 
-                case "4":
+                case "5":
                     List<Ristorante> conDelivery = ristoranteManager.cercaConDelivery();
 
                     if (conDelivery.isEmpty()) {
@@ -416,7 +432,7 @@ public class TheKnife {
                     }
                     break;
 
-                case "5":
+                case "6":
                     List<Ristorante> conPrenotazione = ristoranteManager.cercaConPrenotazioneOnline();
 
                     if (conPrenotazione.isEmpty()) {
@@ -429,7 +445,7 @@ public class TheKnife {
                     }
                     break;
 
-                case "6":
+                case "7":
                     System.out.print("Inserisci minimo stelle (es. 3.5): ");
                     // PROTEZIONE INPUT minimo stelle
                     double minStelle = 0;
@@ -451,7 +467,7 @@ public class TheKnife {
                     }
                     break;
 
-                case "7":
+                case "8":
                     System.out.print("Città: ");
                     String citta = scanner.nextLine();
 
@@ -497,7 +513,7 @@ public class TheKnife {
                         }
                     }
                     break;
-                case "8":
+                case "9":
                     System.out.print("Inserisci nome ristorante: ");
                     String nome = scanner.nextLine();
 
@@ -514,7 +530,7 @@ public class TheKnife {
 
 
 
-                case "9":
+                case "10":
                     List<Ristorante> ristorantiDisponibili = ristoranteManager.getTuttiIRistoranti();
 
                     System.out.println("Scegli il ristorante da recensire:");
@@ -565,9 +581,9 @@ public class TheKnife {
                     break;
 
 
-                case "10":
+                case "11":
                     List<Recensione> tutte = recensioneManager.getTutteLeRecensioni();
-                    if (tutte.isEmpty()) {
+                    if(tutte.isEmpty()) {
                         System.out.println(" Nessuna recensione disponibile.");
                     } else {
                         System.out.println(" Tutte le recensioni:\n");
@@ -579,7 +595,7 @@ public class TheKnife {
                     break;
 
 
-                case "11":
+                case "12":
                     boolean esciPreferiti = false;
                     while (!esciPreferiti) {
                         System.out.println("\n Gestione preferiti");
@@ -652,7 +668,7 @@ public class TheKnife {
 
 
 
-                        case "12": {
+                        case "13": {
                             List<Recensione> mie = getRecensioniUtente(utente, recensioneManager);
 
                             if (mie.isEmpty()) {
@@ -696,7 +712,7 @@ public class TheKnife {
                             break;
                         }
 
-                        case "13": {
+                        case "14": {
                             List<Recensione> mie = getRecensioniUtente(utente, recensioneManager);
 
                             if (mie.isEmpty()) {
@@ -728,7 +744,7 @@ public class TheKnife {
                             break;
                         }
 
-                        case "14":
+                        case "15":
                             List<Ristorante> recensiti = ristoranteManager.getRecensitiDa(utente.getUsername());
                             if (recensiti.isEmpty()) {
                                 System.out.println(" Non hai ancora recensito alcun ristorante.");
@@ -739,7 +755,7 @@ public class TheKnife {
                                 }
                             }
                             break;
-                        case "15":
+                        case "16":
                             gestioneUtenti.salvaSuFile("data/utenti.dat");
 
                             esci = true;

@@ -120,7 +120,7 @@ public class RistoranteManager {
     public List<Ristorante> cercaPerCitta(String citta) {
         List<Ristorante> risultati = new ArrayList<>();
         for (Ristorante r : ristoranti) {
-            if (r.getCitta().toLowerCase().contains(citta.toLowerCase())) {
+            if (r.getCitta().toLowerCase().contains(citta.toLowerCase().trim())) {
                 risultati.add(r);
             }
         }
