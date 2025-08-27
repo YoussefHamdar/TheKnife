@@ -229,7 +229,8 @@ public class RistoranteManager {
         return ristoranti.stream()
                 .filter(r -> r.getCitta().equalsIgnoreCase(citta))
                 .filter(r -> r.getTipoCucina().toLowerCase().contains(tipoCucina.toLowerCase()))
-                .filter(r -> r.getPrezzoMedio() <= prezzoMax)
+                .filter(r -> convertiPrezzo(r.getPrezzoMedio()) <= prezzoMax)
+
                 .filter(r -> !requireDelivery || r.isDeliveryDisponibile())
                 .filter(r -> !requirePrenotazioneOnline || r.isPrenotazioneOnlineDisponibile())
                 .filter(r -> r.getMediaStelle() >= minStelle)
@@ -334,6 +335,13 @@ public class RistoranteManager {
         }
     }
 
+    public int convertiPrezzo(String simboli) {
+        simboli = simboli.trim().replace("â‚¬", "€"); // corregge encoding se serve
+
+        if (simboli.contains("€")) return simboli.length();     // "€€€" → 3
+        if (simboli.contains("$")) return simboli.length();     // "$$$$" → 4
+        return Integer.MAX_VALUE; // se non riconosciuto
+    }
 
 
 

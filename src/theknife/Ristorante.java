@@ -173,9 +173,10 @@ public class Ristorante implements Serializable {
         return longitudine;
     }
 
-    public int getPrezzoMedio() {
-        return prezzoMedio;
+    public String getPrezzoMedio() {
+        return fasciaPrezzo; //
     }
+
 
     public String getDescrizione() {
         return descrizione;
