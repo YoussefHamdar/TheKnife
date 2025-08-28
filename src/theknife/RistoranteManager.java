@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.io.*;
 
+
 /**
  * Gestore dei ristoranti nell'app TheKnife.
  * Permette di caricare, cercare, aggiungere, visualizzare
@@ -58,23 +59,19 @@ public class RistoranteManager {
                     boolean deliveryDisponibile = servizi.contains("delivery");
                     boolean prenotazioneOnlineDisponibile = servizi.contains("reservation") || servizi.contains("prenotazione");
 
+                    // Prende fasciaPrezzo direttamente dal CSV e assegna prezzoMedio
                     int prezzoMedio;
-                    switch (fasciaPrezzo.trim()) {
-                        case "€":
-                            prezzoMedio = 20;
-                            break;
-                        case "€€":
-                            prezzoMedio = 40;
-                            break;
-                        case "€€€":
-                            prezzoMedio = 70;
-                            break;
-                        case "$$$":
-                            prezzoMedio = 100;
-                            break;
-                        default:
-                            prezzoMedio = 0; // valore neutro se la fascia non è riconosciuta
+                    switch (fasciaPrezzo) {
+                        case "$": prezzoMedio = 20; break;
+                        case "$$": prezzoMedio = 40; break;
+                        case "$$$": prezzoMedio = 70; break;
+                        case "$$$$": prezzoMedio = 100; break;
+                        case "$$$$$": prezzoMedio = 120; break;
+                        case "$$$$$$": prezzoMedio = 150; break;
+                        default: prezzoMedio = -1; // valore speciale "non riconosciuto"
                     }
+
+
 
                     int stelle = campoStelle.replaceAll("[^0-9]", "").isEmpty() ? 0 :
                             Integer.parseInt(campoStelle.replaceAll("[^0-9]", ""));
@@ -118,14 +115,15 @@ public class RistoranteManager {
      * @return lista filtrata
      */
     public List<Ristorante> cercaPerCitta(String citta) {
-        List<Ristorante> risultati = new ArrayList<>();
-        for (Ristorante r : ristoranti) {
-            if (r.getCitta().toLowerCase().contains(citta.toLowerCase().trim())) {
-                risultati.add(r);
-            }
-        }
-        return risultati;
-    }
+     List<Ristorante> risultati = new ArrayList<>();
+     for (Ristorante r : ristoranti) {
+     if (r.getCitta().toLowerCase().contains(citta.toLowerCase().trim())) {
+     risultati.add(r);
+     }
+     }
+     return risultati;
+     }
+
 
 
     /**
@@ -262,7 +260,7 @@ public class RistoranteManager {
         System.out.println(" Città: " + r.getCitta() + ", " + r.getNazione());
         System.out.println(" Indirizzo: " + r.getIndirizzo());
         System.out.printf(" Coordinate: %.5f, %.5f\n", r.getLatitudine(), r.getLongitudine());
-        System.out.println(" Prezzo medio: " + r.getPrezzoMedio() + "€  (" + r.getFasciaPrezzo() + ")");
+        System.out.println(" Prezzo medio: " + r.getPrezzoMedio() + " (" + r.getFasciaPrezzo() + ")");
         System.out.println(" Cucina: " + r.getTipoCucina());
         System.out.println(" Delivery: " + (r.isDeliveryDisponibile() ? " sì" : " no"));
         System.out.println(" Prenotazione online: " + (r.isPrenotazioneOnlineDisponibile() ? " sì" : " no"));
@@ -279,10 +277,18 @@ public class RistoranteManager {
      */
 
     public List<Ristorante> getRecensitiDa(String username) {
-        return ristoranti.stream()
-                .filter(r -> r.haRecensioneDellUtente(username))
-                .collect(Collectors.toList());
+        List<Ristorante> recensiti = new ArrayList<>();
+        for (Ristorante r : ristoranti) {
+            for (Recensione rec : r.getRecensioni()) {
+                if (rec.getAutore().equalsIgnoreCase(username)) {
+                    recensiti.add(r);
+                    break; // evita duplicati
+                }
+            }
+        }
+        return recensiti;
     }
+
 
 
     /**

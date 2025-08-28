@@ -14,6 +14,8 @@ import java.util.ArrayList;
 
 
 
+
+
 /**
  * Classe principale dell'app TheKnife.
  * Gestisce registrazione, login e i menù utente e ristoratore.
@@ -248,41 +250,44 @@ public class TheKnife {
                     break;
 
                 case "5": {
-                    System.out.println("Scegli fascia di prezzo:");
-                    System.out.println("1 = €");
-                    System.out.println("2 = €€");
-                    System.out.println("3 = €€€");
-                    System.out.println("4 = €€€€");
-                    System.out.println("5 = $$$");
-                    System.out.println("6 = $$$$");
-                    System.out.print("Scelta (1–6): ");
-
-                    String sceltaPrezzo = scanner.nextLine().trim();
                     String fascia = "";
+                    while (true) {
+                        System.out.println("Scegli fascia di prezzo:");
+                        System.out.println("1 = $");
+                        System.out.println("2 = $$");
+                        System.out.println("3 = $$$");
+                        System.out.println("4 = $$$$");
+                        System.out.println("5 = $$$$$");
+                        System.out.println("6 = $$$$$$");
+                        System.out.print("Scelta (1–6): ");
 
-                    switch (sceltaPrezzo) {
-                        case "1": fascia = "€"; break;
-                        case "2": fascia = "€€"; break;
-                        case "3": fascia = "€€€"; break;
-                        case "4": fascia = "€€€€"; break;
-                        case "5": fascia = "$$$"; break;
-                        case "6": fascia = "$$$$"; break;
-                        default:
-                            System.out.println("Scelta non valida. Riprova.");
-                            break;
+                        String sceltaPrezzo = scanner.nextLine().trim();
+
+                        switch (sceltaPrezzo) {
+                            case "1": fascia = "$"; break;
+                            case "2": fascia = "$$"; break;
+                            case "3": fascia = "$$$"; break;
+                            case "4": fascia = "$$$$"; break;
+                            case "5": fascia = "$$$$$"; break;
+                            case "6": fascia = "$$$$$$"; break;
+                            default:
+                                System.out.println(" Scelta non valida. Inserisci un numero da 1 a 6.");
+                                continue; // torna a chiedere
+                        }
+                        break; // esce dal ciclo se la scelta è valida
                     }
 
-                    if (!fascia.isEmpty()) {
-                        List<Ristorante> filtrati = ristoranteManager.cercaPerFasciaPrezzo(fascia);
-                        if (filtrati.isEmpty()) {
-                            System.out.println(" Nessun ristorante trovato con fascia '" + fascia + "'");
-                        } else {
-                            System.out.println(" Ristoranti trovati:");
-                            stampaLista(filtrati);
-                        }
+                    List<Ristorante> filtrati = ristoranteManager.cercaPerFasciaPrezzo(fascia.trim());
+                    if (filtrati.isEmpty()) {
+                        System.out.println(" Nessun ristorante trovato con fascia '" + fascia + "'");
+                    } else {
+                        System.out.println(" Ristoranti trovati:");
+                        stampaLista(filtrati);
                     }
                     break;
                 }
+
+
 
                 case "6":
                     stampaLista(ristoranteManager.cercaConDelivery());
@@ -438,55 +443,46 @@ public class TheKnife {
                     }
                     break;
                 case "4": {
-                    System.out.println("Scegli fascia di prezzo:");
-                    System.out.println("1 = $");
-                    System.out.println("2 = $$");
-                    System.out.println("3 = $$$");
-                    System.out.println("4 = $$$$");
-                    System.out.println("5 = $$$$$");
-                    System.out.println("6 = $$$$$$");
-                    System.out.print("Scelta (1–6): ");
-
-                    String sceltaPrezzo = scanner.nextLine().trim();
                     String fascia = "";
+                    while (true) {
+                        System.out.println("Scegli fascia di prezzo:");
+                        System.out.println("1 = $");
+                        System.out.println("2 = $$");
+                        System.out.println("3 = $$$");
+                        System.out.println("4 = $$$$");
+                        System.out.println("5 = $$$$$");
+                        System.out.println("6 = $$$$$$");
+                        System.out.print("Scelta (1–6): ");
 
-                    switch (scelta) {
-                        case "1":
-                            fascia = "€";
-                            break;
-                        case "2":
-                            fascia = "€€";
-                            break;
-                        case "3":
-                            fascia = "€€€";
-                            break;
-                        case "4":
-                            fascia = "€€€€";
-                            break;
-                        case "5":
-                            fascia = "$$$";
-                            break;
-                        case "6":
-                            fascia = "$$$$";
-                            break;
-                        default:
-                            System.out.println(" Scelta non valida.");
-                            break;
+                        String sceltaPrezzo = scanner.nextLine().trim();
+
+                        switch (sceltaPrezzo) {
+                            case "1": fascia = "$"; break;
+                            case "2": fascia = "$$"; break;
+                            case "3": fascia = "$$$"; break;
+                            case "4": fascia = "$$$$"; break;
+                            case "5": fascia = "$$$$$"; break;
+                            case "6": fascia = "$$$$$$"; break;
+                            default:
+                                System.out.println("️ Scelta non valida. Inserisci un numero da 1 a 6.");
+                                continue; // ripete la domanda finché non è valida
+                        }
+                        break; // esce dal while solo se la scelta è valida
                     }
 
-                    if (!fascia.isEmpty()) {
-                        List<Ristorante> filtrati = ristoranteManager.cercaPerFasciaPrezzo(fascia);
-                        if (filtrati.isEmpty()) {
-                            System.out.println(" Nessun ristorante trovato con fascia '" + fascia + "'");
-                        } else {
-                            System.out.println(" Ristoranti trovati:");
-                            for (Ristorante r : filtrati) {
-                                System.out.println("- " + r);
-                            }
+                    List<Ristorante> filtrati = ristoranteManager.cercaPerFasciaPrezzo(fascia.trim());
+                    if (filtrati.isEmpty()) {
+                        System.out.println(" Nessun ristorante trovato con fascia '" + fascia + "'");
+                    } else {
+                        System.out.println(" Ristoranti trovati:");
+                        for (Ristorante r : filtrati) {
+                            System.out.println("- " + r);
                         }
                     }
                     break;
-            }
+                }
+
+
 
                 case "5":
                     List<Ristorante> conDelivery = ristoranteManager.cercaConDelivery();
@@ -565,11 +561,11 @@ public class TheKnife {
                     try {
                         prezzoMax = Integer.parseInt(scanner.nextLine().trim());
                         if (prezzoMax < 1 || prezzoMax > 6) {
-                            System.out.println("⚠️ Valore fuori intervallo, imposto nessun limite.");
+                            System.out.println(" Valore fuori intervallo, imposto nessun limite.");
                             prezzoMax = Integer.MAX_VALUE;
                         }
                     } catch (NumberFormatException e) {
-                        System.out.println("⚠️ Input non valido, imposto nessun limite.");
+                        System.out.println("️ Input non valido, imposto nessun limite.");
                     }
 
 
@@ -626,19 +622,17 @@ public class TheKnife {
                     String nomeRistorante = scanner.nextLine().trim();
 
                     Ristorante selezionato = ristoranteManager.cercaPerNome(nomeRistorante);
-
                     if (selezionato == null) {
                         System.out.println("️ Nessun ristorante trovato con quel nome.");
                         break;
                     }
 
                     System.out.println("Hai scelto: " + selezionato.getNome() + " (" + selezionato.getCitta() + ")");
-
                     System.out.print("Scrivi la tua recensione: ");
                     String testo = scanner.nextLine();
 
                     System.out.print("Quante stelle (1–5): ");
-                    int stelle = 0;
+                    int stelle;
                     try {
                         stelle = Integer.parseInt(scanner.nextLine());
                         if (stelle < 1 || stelle > 5) {
@@ -650,6 +644,7 @@ public class TheKnife {
                         stelle = 3;
                     }
 
+                    //  Qui passo SOLO 4 argomenti, la data la mette già il manager
                     recensioneManager.aggiungiRecensione(
                             utente.getUsername(),
                             selezionato.getNome(),
@@ -658,22 +653,49 @@ public class TheKnife {
                     );
                     recensioneManager.salvaSuFile("data/recensioni.dat");
 
+                    //  Qui invece uso 5 argomenti perché chiamo direttamente il costruttore
+                    selezionato.getRecensioni().add(
+                            new Recensione(
+                                    utente.getUsername(),
+                                    selezionato.getNome(),
+                                    testo,
+                                    stelle,
+                                    LocalDate.now()
+                            )
+                    );
+
                     System.out.println(" Recensione salvata per " + selezionato.getNome());
                     break;
                 }
 
-                case "11":
+
+                case "11": {
+                    System.out.print("Inserisci il nome del ristorante per vedere le recensioni: ");
+                    String nomeRistorante = scanner.nextLine().trim();
+
+                    // Recupera tutte le recensioni
                     List<Recensione> tutte = recensioneManager.getTutteLeRecensioni();
-                    if(tutte.isEmpty()) {
-                        System.out.println(" Nessuna recensione disponibile.");
+
+                    // Filtra solo quelle del ristorante scelto
+                    List<Recensione> filtrate = new ArrayList<>();
+                    for (Recensione rec : tutte) {
+                        if (rec.getNomeRistorante().equalsIgnoreCase(nomeRistorante)) {
+                            filtrate.add(rec);
+                        }
+                    }
+
+                    if (filtrate.isEmpty()) {
+                        System.out.println(" Nessuna recensione trovata per il ristorante '" + nomeRistorante + "'");
                     } else {
-                        System.out.println(" Tutte le recensioni:\n");
-                        for (Recensione rec : tutte) {
+                        System.out.println(" Recensioni per '" + nomeRistorante + "':\n");
+                        for (Recensione rec : filtrate) {
                             System.out.println(rec);
                             System.out.println("--------------------------------------------------");
                         }
                     }
                     break;
+                }
+
 
 
                 case "12":
@@ -872,16 +894,39 @@ public class TheKnife {
         boolean esci = false;
         while (!esci) {
             System.out.println("\n Menù ristoratore (" + ristoratore.getUsername() + ")");
-            System.out.println("1. Visualizza recensioni");
-            System.out.println("2. Rispondi a una recensione");
-            System.out.println("3. Aggiungi ristorante");
-            System.out.println("4. Visualizza valutazione media e numero di recensioni");
-            System.out.println("5. Logout");
+            System.out.println("1. Visualizza i miei ristoranti con dettagli");
+            System.out.println("2. Visualizza recensioni");
+            System.out.println("3. Rispondi a una recensione");
+            System.out.println("4. Aggiungi ristorante");
+            System.out.println("5. Visualizza valutazione media e numero di recensioni");
+            System.out.println("6. Logout");
             System.out.print("Scelta: ");
             String scelta = scanner.nextLine();
 
             switch (scelta) {
                 case "1":
+                    List<Ristorante> mieiRistoranti = ristoranteManager.getRistorantiGestitiDa(ristoratore.getUsername());
+                    if (mieiRistoranti.isEmpty()) {
+                        System.out.println(" Non gestisci ancora nessun ristorante.");
+                    } else {
+                        for (Ristorante r : mieiRistoranti) {
+                            System.out.println("─────────────────────────────");
+                            System.out.println("  Nome: " + r.getNome());
+                            System.out.println("  Città: " + r.getCitta());
+                            System.out.println(" Stelle: " + r.getStelle());
+                            System.out.println(" Tipo cucina: " + r.getTipoCucina());
+                            System.out.println(" Fascia prezzo: " + r.getFasciaPrezzo() + " (Prezzo medio: " + r.getPrezzoMedio() + "€)");
+                            System.out.println(" Delivery: " + (r.isDeliveryDisponibile() ? "Sì" : "No"));
+                            System.out.println(" Prenotazione online: " + (r.isPrenotazioneOnlineDisponibile() ? "Sì" : "No"));
+                            System.out.println("Nazione: " + r.getNazione());
+                            System.out.println(" Indirizzo: " + r.getIndirizzo());
+                            System.out.println(" Coordinate: " + r.getLatitudine() + ", " + r.getLongitudine());
+                            System.out.println("─────────────────────────────\n");
+                        }
+                    }
+                    break;
+
+                case "2":
                     List<Ristorante> gestiti = ristoranteManager.getRistorantiGestitiDa(ristoratore.getUsername());
 
                     if (gestiti.isEmpty()) {
@@ -912,7 +957,7 @@ public class TheKnife {
 
                     break;
 
-                case "2": {
+                case "3": {
                     List<Recensione> tutte = recensioneManager.getTutteLeRecensioni();
 
                     if (tutte.isEmpty()) {
@@ -946,114 +991,136 @@ public class TheKnife {
                 }
 
 
-                case "3":
+                case "4":
                     System.out.print("Nome ristorante: ");
                     String nome = scanner.nextLine();
+
                     System.out.print("Città: ");
                     String citta = scanner.nextLine();
-                    System.out.print("Numero stelle (1–5): ");
-                    // PROTEZIONE INPUT stelle ristorante
+
+                    // Stelle protette
                     int stelle = 0;
-                    try {
-                        stelle = Integer.parseInt(scanner.nextLine());
-                    } catch (NumberFormatException e) {
-                        System.out.println(" Valore non valido, imposto 0.");
+                    while (true) {
+                        System.out.print("Numero stelle (1–5): ");
+                        try {
+                            stelle = Integer.parseInt(scanner.nextLine());
+                            if (stelle >= 1 && stelle <= 5) {
+                                break;
+                            } else {
+                                System.out.println(" Inserisci un numero da 1 a 5.");
+                            }
+                        } catch (NumberFormatException e) {
+                            System.out.println(" Valore non valido. Riprova.");
+                        }
                     }
-
-
 
                     System.out.print("Tipo cucina (es. Giapponese, Italiana, Messicana): ");
                     String tipoCucina = scanner.nextLine();
-                    System.out.println("Scegli fascia di prezzo:");
-                    System.out.println("1 = $");
-                    System.out.println("2 = $$");
-                    System.out.println("3 = $$$");
-                    System.out.println("4 = $$$$");
-                    System.out.println("5 = $$$$$");
-                    System.out.println("6 = $$$$$$");
-                    System.out.print("Scelta (1–6): ");
 
-                    String sceltaPrezzo = scanner.nextLine().trim();
+                    // Fascia di prezzo protetta
                     String fasciaPrezzo = "";
-                    int prezzoMedio = 50; // valore di default
+                    int prezzoMedio = 50;
+                    while (true) {
+                        System.out.println("Scegli fascia di prezzo:");
+                        System.out.println("1 = $");
+                        System.out.println("2 = $$");
+                        System.out.println("3 = $$$");
+                        System.out.println("4 = $$$$");
+                        System.out.println("5 = $$$$$");
+                        System.out.println("6 = $$$$$$");
+                        System.out.print("Scelta (1–6): ");
+                        String sceltaPrezzo = scanner.nextLine().trim();
 
-                    switch (sceltaPrezzo) {
-                        case "1":
-                            fasciaPrezzo = "$";
-                            prezzoMedio = 20;
-                            break;
-                        case "2":
-                            fasciaPrezzo = "$$";
-                            prezzoMedio = 40;
-                            break;
-                        case "3":
-                            fasciaPrezzo = "$$$";
-                            prezzoMedio = 70;
-                            break;
-                        case "4":
-                            fasciaPrezzo = "$$$$";
-                            prezzoMedio = 100;
-                            break;
-                        case "5":
-                            fasciaPrezzo = "$$$$$";
-                            prezzoMedio = 70;
-                            break;
-                        case "6":
-                            fasciaPrezzo = "$$$$$$";
-                            prezzoMedio = 100;
-                            break;
-                        default:
-                            System.out.println(" Fascia non riconosciuta. Uso valore di default (€€, 50).");
-                            fasciaPrezzo = "€€";
-                            prezzoMedio = 50;
-                            break;
+                        switch (sceltaPrezzo) {
+                            case "1": fasciaPrezzo = "$"; prezzoMedio = 20; break;
+                            case "2": fasciaPrezzo = "$$"; prezzoMedio = 40; break;
+                            case "3": fasciaPrezzo = "$$$"; prezzoMedio = 70; break;
+                            case "4": fasciaPrezzo = "$$$$"; prezzoMedio = 100; break;
+                            case "5": fasciaPrezzo = "$$$$$"; prezzoMedio = 120; break;
+                            case "6": fasciaPrezzo = "$$$$$$"; prezzoMedio = 150; break;
+                            default:
+                                System.out.println(" Scelta non valida. Inserisci un numero da 1 a 6.");
+                                continue;
+                        }
+                        break;
                     }
 
-
-                    System.out.print(" Inserisci nazione: ");
+                    System.out.print("Inserisci nazione: ");
                     String nazione = scanner.nextLine();
 
-                    System.out.print(" Inserisci indirizzo: ");
+                    System.out.print("Inserisci indirizzo: ");
                     String indirizzo = scanner.nextLine();
 
-                    System.out.print("Inserisci latitudine (es. 45.95): ");
-                    // PROTEZIONE INPUT latitudine
+                    // Latitudine protetta
                     double latitudine = 0;
-                    try {
-                        latitudine = Double.parseDouble(scanner.nextLine());
-                    } catch (NumberFormatException e) {
-                        System.out.println(" Latitudine non valida, imposto 0.");
+                    while (true) {
+                        System.out.print("Inserisci latitudine (es. 45.95): ");
+                        try {
+                            latitudine = Double.parseDouble(scanner.nextLine());
+                            break;
+                        } catch (NumberFormatException e) {
+                            System.out.println(" Latitudine non valida, riprova.");
+                        }
                     }
 
-                    System.out.print("Inserisci longitudine (es. 8.43): ");
-                    // PROTEZIONE INPUT longitudine
+                    // Longitudine protetta
                     double longitudine = 0;
-                    try {
-                        longitudine = Double.parseDouble(scanner.nextLine());
-                    } catch (NumberFormatException e) {
-                        System.out.println(" Longitudine non valida, imposto 0.");
+                    while (true) {
+                        System.out.print("Inserisci longitudine (es. 8.43): ");
+                        try {
+                            longitudine = Double.parseDouble(scanner.nextLine());
+                            break;
+                        } catch (NumberFormatException e) {
+                            System.out.println(" Longitudine non valida, riprova.");
+                        }
                     }
 
-                    System.out.print("Offre delivery? (true/false): ");
-                    boolean deliveryDisponibile = Boolean.parseBoolean(scanner.nextLine().trim());
+                    // Delivery si/no
+                    boolean deliveryDisponibile = false;
+                    while (true) {
+                        System.out.print("Offre delivery? (si/no): ");
+                        String rispostaDelivery = scanner.nextLine().trim().toLowerCase();
+                        if (rispostaDelivery.equals("si") || rispostaDelivery.equals("sì")) {
+                            deliveryDisponibile = true;
+                            break;
+                        } else if (rispostaDelivery.equals("no")) {
+                            deliveryDisponibile = false;
+                            break;
+                        } else {
+                            System.out.println(" Valore non valido. Scrivi solo 'si' o 'no'.");
+                        }
+                    }
 
-                    System.out.print("Offre prenotazione online? (true/false): ");
-                    boolean prenotazioneOnlineDisponibile = Boolean.parseBoolean(scanner.nextLine().trim());
+                    // Prenotazione si/no
+                    boolean prenotazioneOnlineDisponibile = false;
+                    while (true) {
+                        System.out.print("Offre prenotazione online? (si/no): ");
+                        String rispostaPrenotazione = scanner.nextLine().trim().toLowerCase();
+                        if (rispostaPrenotazione.equals("si") || rispostaPrenotazione.equals("sì")) {
+                            prenotazioneOnlineDisponibile = true;
+                            break;
+                        } else if (rispostaPrenotazione.equals("no")) {
+                            prenotazioneOnlineDisponibile = false;
+                            break;
+                        } else {
+                            System.out.println(" Valore non valido. Scrivi solo 'si' o 'no'.");
+                        }
+                    }
+
                     Ristorante nuovo = new Ristorante(nome, citta, stelle, tipoCucina, fasciaPrezzo,
                             deliveryDisponibile, prenotazioneOnlineDisponibile, prezzoMedio,
                             nazione, indirizzo, latitudine, longitudine,
-                            ristoratore.getUsername()  // ← username del gestore
+                            ristoratore.getUsername()
                     );
 
                     ristoranteManager.aggiungiRistorante(nuovo);
                     ristoranteManager.salvaSuFile("data/ristoranti_backup.dat");
 
-
-
-                    System.out.println("Ristorante aggiunto con successo.");
+                    System.out.println(" Ristorante aggiunto con successo.");
                     break;
 
-                case "4":
+
+                case "5":
                     List<Ristorante> miei = ristoranteManager.getRistorantiGestitiDa(ristoratore.getUsername());
 
                     for (Ristorante r : miei) {
@@ -1065,7 +1132,7 @@ public class TheKnife {
                     break;
 
 
-                case "5":
+                case "6":
                     gestioneUtenti.salvaSuFile("data/utenti.dat");
                     ristoranteManager.salvaSuFile("data/ristoranti_backup.dat");
                     esci = true;
