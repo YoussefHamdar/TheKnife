@@ -958,19 +958,29 @@ public class TheKnife {
                     break;
 
                 case "3": {
+                    // Recupera tutte le recensioni dal manager
                     List<Recensione> tutte = recensioneManager.getTutteLeRecensioni();
 
-                    if (tutte.isEmpty()) {
+                    // Filtra solo quelle dei ristoranti di cui sei gestore
+                    List<Recensione> mie = new ArrayList<>();
+                    for (Recensione rec : tutte) {
+                        Ristorante r = ristoranteManager.cercaPerNome(rec.getNomeRistorante());
+                        if (r != null && r.getGestore().equalsIgnoreCase(ristoratore.getUsername())) {
+                            mie.add(rec);
+                        }
+                    }
+
+                    if (mie.isEmpty()) {
                         System.out.println(" Nessuna recensione disponibile a cui rispondere.");
                         break;
                     }
 
-                    for (int i = 0; i < tutte.size(); i++) {
-                        System.out.println(i + ". " + tutte.get(i));
+                    // Mostra le recensioni filtrate
+                    for (int i = 0; i < mie.size(); i++) {
+                        System.out.println(i + ". " + mie.get(i));
                     }
 
                     System.out.print("Numero della recensione: ");
-                    // PROTEZIONE INPUT indice recensione
                     int index = -1;
                     try {
                         index = Integer.parseInt(scanner.nextLine());
@@ -978,17 +988,20 @@ public class TheKnife {
                         System.out.println(" Numero non valido.");
                     }
 
-
-                    if (index >= 0 && index < tutte.size()) {
+                    if (index >= 0 && index < mie.size()) {
                         System.out.print("Scrivi la risposta: ");
                         String risposta = scanner.nextLine();
-                        tutte.get(index).setRispostaDelRistoratore(risposta);
+                        mie.get(index).setRispostaDelRistoratore(risposta);
                         System.out.println("Risposta salvata.");
+
+                        // 🔹 Salva subito su file così la risposta resta memorizzata
+                        recensioneManager.salvaSuFile("data/recensioni.dat");
                     } else {
                         System.out.println(" Numero non valido.");
                     }
                     break;
                 }
+
 
 
                 case "4":
