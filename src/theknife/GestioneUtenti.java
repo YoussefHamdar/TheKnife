@@ -227,5 +227,21 @@ public void salvaSuFile(String path) {
         }
     }
 
+    /**
+     * Verifica se lo username è disponibile (non ancora registrato).
+     *
+     * @param username da controllare
+     * @return true se disponibile, false se già esiste
+     */
+    public boolean usernameDisponibile(String username) {
+        for (Utente u : utenti) {
+            if (u.getUsername().equalsIgnoreCase(username)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
 
 }

@@ -118,8 +118,18 @@ public class TheKnife {
                         System.out.println("Formato data non valido. Continuiamo senza.");
                     }
 
-                    System.out.print("Username: ");
-                    String username = scanner.nextLine();
+                    String username = null;
+                    while (username == null) {
+                        System.out.print("Username: ");
+                        String input = scanner.nextLine().trim();
+
+                        if (gestioneUtenti.usernameDisponibile(input)) {
+                            username = input;
+                        } else {
+                            System.out.println(" Username non disponibile. Scegli un altro.");
+                        }
+                    }
+
 
                     System.out.print("Password: ");
                     String password = scanner.nextLine();
@@ -325,41 +335,93 @@ public class TheKnife {
                     break;
 
                 case "9":
-                    System.out.print(" Città: ");
-                    String city = scanner.nextLine();
+                    System.out.print("Città: ");
+                     citta = scanner.nextLine();
 
-                    System.out.print(" Tipo cucina: ");
-                    String tipoCucina = scanner.nextLine();
+                    System.out.print("Tipo cucina: ");
+                     tipo = scanner.nextLine();
 
-                    // PROTEZIONE INPUT per maxPrezzo
-                    int maxPrezzo = Integer.MAX_VALUE;
-                    try {
-                        System.out.print(" Prezzo massimo: ");
-                        maxPrezzo = Integer.parseInt(scanner.nextLine());
-                    } catch (NumberFormatException e) {
-                        System.out.println(" Prezzo non valido, imposto nessun limite.");
+                    // Prezzo massimo con protezione
+                    int prezzoMax = -1;
+                    while (prezzoMax == -1) {
+                        System.out.println("Prezzo massimo (scegli livello):");
+                        System.out.println("1 = $");
+                        System.out.println("2 = $$");
+                        System.out.println("3 = $$$");
+                        System.out.println("4 = $$$$");
+                        System.out.println("5 = $$$$$");
+                        System.out.println("6 = $$$$$$");
+                        System.out.print("Scelta (1–6): ");
+
+                        String input = scanner.nextLine().trim();
+                        try {
+                             int livelloPrezzo = Integer.parseInt(input);
+                            if (livelloPrezzo >= 1 && livelloPrezzo <= 6) {
+                                prezzoMax = livelloPrezzo;
+                            } else {
+                                System.out.println(" Valore fuori intervallo. Riprova.");
+                            }
+                        } catch (NumberFormatException e) {
+                            System.out.println(" Input non valido. Inserisci un numero da 1 a 6.");
+                        }
                     }
 
-                    System.out.print(" Delivery richiesto (sì/no): ");
-                    boolean delivery = scanner.nextLine().equalsIgnoreCase("sì");
-
-                    System.out.print(" Prenotazione online richiesta (sì/no): ");
-                    boolean prenotazione = scanner.nextLine().equalsIgnoreCase("sì");
-
-                    // PROTEZIONE INPUT per mediaMinima
-                    double mediaMinima = 0;
-                    try {
-                        System.out.print(" Media stelle minima: ");
-                        mediaMinima = Double.parseDouble(scanner.nextLine());
-                    } catch (NumberFormatException e) {
-                        System.out.println(" Valore non valido, imposto 0.");
+                    // Delivery con protezione
+                    Boolean delivery = null;
+                    while (delivery == null) {
+                        System.out.print("Richiedi delivery? (sì/no): ");
+                        String risposta = scanner.nextLine().trim().toLowerCase();
+                        if (risposta.equals("sì") || risposta.equals("si")) delivery = true;
+                        else if (risposta.equals("no")) delivery = false;
+                        else System.out.println(" Risposta non valida. Scrivi 'sì' o 'no'.");
                     }
 
-                    List<Ristorante> risultati = ristoranteManager.cercaCombinata(
-                            city, tipoCucina, maxPrezzo, delivery, prenotazione, mediaMinima
+
+                    // Prenotazione online con protezione
+                    Boolean prenotazione = null;
+                    while (prenotazione == null) {
+                        System.out.print("Richiedi prenotazione online? (sì/no): ");
+                        String risposta = scanner.nextLine().trim().toLowerCase();
+                        if (risposta.equals("sì") || risposta.equals("si")) prenotazione = true;
+                        else if (risposta.equals("no")) prenotazione = false;
+                        else System.out.println(" Risposta non valida. Scrivi 'sì' o 'no'.");
+                    }
+
+
+                    // Media stelle minima con protezione
+                    double minMediaStelle = -1;
+                    while (minMediaStelle < 0) {
+                        System.out.print("Media stelle minima: ");
+                        String input = scanner.nextLine().trim();
+                        try {
+                            minMediaStelle = Double.parseDouble(input);
+                            if (minMediaStelle < 0 || minMediaStelle > 5) {
+                                System.out.println(" Valore fuori intervallo. Inserisci un numero tra 0 e 5.");
+                                minMediaStelle = -1;
+                            }
+                        } catch (NumberFormatException e) {
+                            System.out.println(" Input non valido. Inserisci un numero decimale.");
+                        }
+                    }
+
+                    // Ricerca combinata
+                    List<Ristorante> ristorantiFiltrati = ristoranteManager.cercaCombinata(
+                            citta, tipo, prezzoMax, delivery, prenotazione, minMediaStelle
                     );
-                    stampaLista(risultati);
+
+                    if (ristorantiFiltrati.isEmpty()) {
+                        System.out.println(" Nessun ristorante trovato con i criteri specificati.");
+                    } else {
+                        System.out.println(" Ristoranti trovati:");
+                        for (Ristorante ristoranteTrovato : ristorantiFiltrati) {
+                            System.out.printf("- %s (%s, %.1f stelle)\n",
+                                    ristoranteTrovato.getNome(),
+                                    ristoranteTrovato.getFasciaPrezzo(),
+                                    ristoranteTrovato.getMediaStelle());
+                        }
+                    }
                     break;
+
 
                 case "10":
                     esci = true;
@@ -556,49 +618,75 @@ public class TheKnife {
 
                 case "8":
                     System.out.print("Città: ");
-                    String citta = scanner.nextLine();
+                    String citta = scanner.nextLine().trim();
 
                     System.out.print("Tipo cucina: ");
-                    String tipo = scanner.nextLine();
+                    String tipo = scanner.nextLine().trim();
 
-                    System.out.println("Prezzo massimo (scegli livello):");
-                    System.out.println("1 = $");
-                    System.out.println("2 = $$");
-                    System.out.println("3 = $$$");
-                    System.out.println("4 = $$$$");
-                    System.out.println("5 = $$$$$");
-                    System.out.println("6 = $$$$$$");
-                    System.out.print("Scelta (1–6): ");
+                    // Prezzo massimo con protezione
+                    int prezzoMax = -1;
+                    while (prezzoMax == -1) {
+                        System.out.println("Prezzo massimo (scegli livello):");
+                        System.out.println("1 = $");
+                        System.out.println("2 = $$");
+                        System.out.println("3 = $$$");
+                        System.out.println("4 = $$$$");
+                        System.out.println("5 = $$$$$");
+                        System.out.println("6 = $$$$$$");
+                        System.out.print("Scelta (1–6): ");
 
-                    int prezzoMax = Integer.MAX_VALUE;
-                    try {
-                        prezzoMax = Integer.parseInt(scanner.nextLine().trim());
-                        if (prezzoMax < 1 || prezzoMax > 6) {
-                            System.out.println(" Valore fuori intervallo, imposto nessun limite.");
-                            prezzoMax = Integer.MAX_VALUE;
+                        String inputPrezzo = scanner.nextLine().trim();
+                        try {
+                            int sceltaPrezzo = Integer.parseInt(inputPrezzo);
+                            if (sceltaPrezzo >= 1 && sceltaPrezzo <= 6) {
+                                prezzoMax = sceltaPrezzo;
+                            } else {
+                                System.out.println(" Valore fuori intervallo. Riprova.");
+                            }
+                        } catch (NumberFormatException e) {
+                            System.out.println(" Input non valido. Inserisci un numero da 1 a 6.");
                         }
-                    } catch (NumberFormatException e) {
-                        System.out.println("️ Input non valido, imposto nessun limite.");
+                    }
+
+                    // Delivery con protezione
+                    Boolean delivery = null;
+                    while (delivery == null) {
+                        System.out.print("Richiedi delivery? (sì/no): ");
+                        String risposta = scanner.nextLine().trim().toLowerCase();
+                        if (risposta.equals("sì") || risposta.equals("si")) delivery = true;
+                        else if (risposta.equals("no")) delivery = false;
+                        else System.out.println(" Risposta non valida. Scrivi 'sì' o 'no'.");
+                    }
+
+                    // Prenotazione online con protezione
+                    Boolean prenotazione = null;
+                    while (prenotazione == null) {
+                        System.out.print("Richiedi prenotazione online? (sì/no): ");
+                        String risposta = scanner.nextLine().trim().toLowerCase();
+                        if (risposta.equals("sì") || risposta.equals("si")) prenotazione = true;
+                        else if (risposta.equals("no")) prenotazione = false;
+                        else System.out.println(" Risposta non valida. Scrivi 'sì' o 'no'.");
                     }
 
 
-
-                    System.out.print("Richiedi delivery? (sì/no): ");
-                    boolean delivery = scanner.nextLine().equalsIgnoreCase("sì");
-
-                    System.out.print("Richiedi prenotazione online? (sì/no): ");
-                    boolean prenotazione = scanner.nextLine().equalsIgnoreCase("sì");
-
-                    System.out.print("Media stelle minima: ");
-                    // PROTEZIONE INPUT media stelle minima
-                    double minMediaStelle = 0;
-                    try {
-                        minMediaStelle = Double.parseDouble(scanner.nextLine());
-                    } catch (NumberFormatException e) {
-                        System.out.println(" Valore non valido, imposto 0.");
+                    // Media stelle minima con protezione
+                    double minMediaStelle = -1;
+                    while (minMediaStelle < 0) {
+                        System.out.print("Media stelle minima (0–5): ");
+                        String inputStelle = scanner.nextLine().trim();
+                        try {
+                            double valore = Double.parseDouble(inputStelle);
+                            if (valore >= 0 && valore <= 5) {
+                                minMediaStelle = valore;
+                            } else {
+                                System.out.println(" Valore fuori intervallo. Inserisci un numero tra 0 e 5.");
+                            }
+                        } catch (NumberFormatException e) {
+                            System.out.println(" Input non valido. Inserisci un numero decimale.");
+                        }
                     }
 
-
+                    // Ricerca combinata
                     List<Ristorante> ristorantiFiltrati = ristoranteManager.cercaCombinata(
                             citta, tipo, prezzoMax, delivery, prenotazione, minMediaStelle
                     );
@@ -608,11 +696,13 @@ public class TheKnife {
                     } else {
                         System.out.println(" Ristoranti trovati:");
                         for (Ristorante r : ristorantiFiltrati) {
-                            System.out.printf("- %s (%s, %.1f stelle)\n", r.getNome(), r.getFasciaPrezzo(), r.getMediaStelle());
+                            System.out.printf("- %s (%s, %.1f stelle)\n",
+                                    r.getNome(),
+                                    r.getFasciaPrezzo(),
+                                    r.getMediaStelle());
                         }
                     }
                     break;
-
 
                 case "9":
                     System.out.print("Inserisci nome ristorante: ");
