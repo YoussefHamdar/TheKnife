@@ -71,12 +71,25 @@ public class TheKnife {
 
         // Associa le recensioni ai ristoranti caricati
         recensioneManager.associaRecensioni(ristoranteManager.getTuttiIRistoranti());
+        // Rimuove recensioni duplicate dal file e dalla memoria
+        recensioneManager.rimuoviDuplicati();
+        // Rimuove duplicati anche dentro ogni ristorante
+        for (Ristorante r : ristoranteManager.getTuttiIRistoranti()) {
+            r.rimuoviRecensioniDuplicate();
+        }
+        // Salva i ristoranti aggiornati
+        ristoranteManager.salvaSuFile("data/ristoranti_backup.dat");
+        // Feedback visivo
+        System.out.println(" Recensioni duplicate eliminate e ristoranti aggiornati.");
+
+
 
 
         Utente utenteLoggato = null;
         boolean esci = false;
 
         while (!esci) {
+
             System.out.println("\n BENVENUTO SU THEKNIFE ");
             System.out.println("1. Registrati");
             System.out.println("2. Login");
@@ -653,16 +666,6 @@ public class TheKnife {
                     );
                     recensioneManager.salvaSuFile("data/recensioni.dat");
 
-                    //  Qui invece uso 5 argomenti perché chiamo direttamente il costruttore
-                    selezionato.getRecensioni().add(
-                            new Recensione(
-                                    utente.getUsername(),
-                                    selezionato.getNome(),
-                                    testo,
-                                    stelle,
-                                    LocalDate.now()
-                            )
-                    );
 
                     System.out.println(" Recensione salvata per " + selezionato.getNome());
                     break;
@@ -711,25 +714,25 @@ public class TheKnife {
 
                         switch (sottoScelta) {
                             case "1": {
-                                List<Ristorante> elenco = ristoranteManager.getTuttiIRistoranti();
-                                for (int i = 0; i < elenco.size(); i++) {
-                                    System.out.println(i + ". " + elenco.get(i));
-                                }
-                                System.out.print("Numero da aggiungere: ");
-                                // PROTEZIONE INPUT indice aggiunta preferito
-                                int indexAggiungi = -1;
-                                try {
-                                    indexAggiungi = Integer.parseInt(scanner.nextLine());
-                                } catch (NumberFormatException e) {
-                                    System.out.println(" Valore non valido.");
-                                }
+                                System.out.print("Inserisci il nome del ristorante da aggiungere ai preferiti: ");
+                                String nomeDaAggiungere = scanner.nextLine().trim();
 
-                                if (indexAggiungi >= 0 && indexAggiungi < elenco.size()) {
-                                    utente.aggiungiPreferito(elenco.get(indexAggiungi));
-                                    System.out.println("Ristorante aggiunto ai preferiti.");
+                                Ristorante ristorantePreferito = ristoranteManager.cercaPerNome(nomeDaAggiungere);
+                                if (ristorantePreferito == null) {
+                                    System.out.println(" Nessun ristorante trovato con quel nome.");
+                                } else {
+                                    if (utente.getPreferiti().contains(ristorantePreferito)) {
+                                        System.out.println(" Il ristorante è già nei tuoi preferiti.");
+                                    } else {
+                                        utente.aggiungiPreferito(ristorantePreferito);
+                                        System.out.println(" Ristorante aggiunto ai preferiti.");
+                                    }
                                 }
                                 break;
                             }
+
+
+
                             case "2": {
                                 List<Ristorante> pref = utente.getPreferiti();
                                 for (int i = 0; i < pref.size(); i++) {

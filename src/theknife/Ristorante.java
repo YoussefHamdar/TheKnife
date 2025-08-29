@@ -8,6 +8,7 @@ package theknife;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.Serializable;
+import java.util.HashSet;
 /**
  * Rappresenta un ristorante registrato nell'app TheKnife.
  * Contiene dati anagrafici, tipo cucina, coordinate geografiche,
@@ -125,6 +126,16 @@ public class Ristorante implements Serializable {
     public void aggiungiRecensione(Recensione r) {
         recensioni.add(r);
     }
+
+
+
+    /**
+     * Rimuove le recensioni duplicate basandosi su equals().
+     */
+    public void rimuoviRecensioniDuplicate() {
+        recensioni = new ArrayList<>(new HashSet<>(recensioni));
+    }
+
     /**
      * Verifica se l'utente ha già recensito questo ristorante.
      *

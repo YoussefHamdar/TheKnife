@@ -9,6 +9,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.*;
+import java.util.Set;
+import java.util.HashSet;
+
 
 /**
  * Classe che gestisce le recensioni degli utenti.
@@ -34,8 +37,11 @@ public class RecensioneManager {
      */
     public void aggiungiRecensione(String username, String nomeRistorante, String testo, int stelle) {
         Recensione r = new Recensione(username, nomeRistorante, testo, stelle, LocalDate.now());
-        recensioni.add(r);
+        if (!recensioni.contains(r)) {
+            recensioni.add(r);
+        }
     }
+
 
     /**
      * Restituisce l'elenco di tutte le recensioni.
@@ -112,17 +118,40 @@ public class RecensioneManager {
             recensioni = new ArrayList<>(); // fallback
         }
     }
-
     public void associaRecensioni(List<Ristorante> ristoranti) {
         for (Recensione recensione : recensioni) {
             for (Ristorante r : ristoranti) {
                 if (r.getNome().equalsIgnoreCase(recensione.getNomeRistorante())) {
-                    r.aggiungiRecensione(recensione);
+                    if (!r.getRecensioni().contains(recensione)) {
+                        r.aggiungiRecensione(recensione);
+                    }
                     break;
                 }
             }
         }
     }
+
+
+
+
+    public void rimuoviDuplicati() {
+        Set<String> chiaviUniche = new HashSet<>();
+        List<Recensione> filtrate = new ArrayList<>();
+
+        for (Recensione r : recensioni) {
+            String chiave = r.getAutore() + "|" + r.getNomeRistorante() + "|" + r.getTesto() + "|" + r.getStelle() + "|" + r.getData();
+            if (!chiaviUniche.contains(chiave)) {
+                chiaviUniche.add(chiave);
+                filtrate.add(r);
+            }
+        }
+
+        recensioni = filtrate;
+        salvaSuFile("data/recensioni.dat");
+        System.out.println(" Recensioni duplicate rimosse.");
+    }
+
+
 
 
 

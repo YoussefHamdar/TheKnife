@@ -116,4 +116,24 @@ public class Recensione implements Serializable {
         }
         return output;
     }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        Recensione other = (Recensione) obj;
+        return autore.equals(other.autore) &&
+                nomeRistorante.equals(other.nomeRistorante) &&
+                testo.equals(other.testo) &&
+                stelle == other.stelle &&
+                data.equals(other.data);
+    }
+
+    @Override
+    public int hashCode() {
+        return (autore + nomeRistorante + testo + stelle + data).hashCode();
+    }
+
 }
