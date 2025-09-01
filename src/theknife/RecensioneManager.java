@@ -118,6 +118,18 @@ public class RecensioneManager {
             recensioni = new ArrayList<>(); // fallback
         }
     }
+
+
+    /**
+     * Associa ogni recensione presente nel sistema al ristorante corrispondente.
+     *
+     * Per ogni {@link Recensione} nella lista interna, il metodo cerca un {@link Ristorante}
+     * nella lista fornita il cui nome corrisponda (ignorando maiuscole/minuscole) al nome del ristorante
+     * indicato nella recensione. Se trova una corrispondenza e la recensione non è già presente
+     * nella lista del ristorante, la aggiunge.
+     *
+     * @param ristoranti lista di ristoranti a cui associare le recensioni
+     */
     public void associaRecensioni(List<Ristorante> ristoranti) {
         for (Recensione recensione : recensioni) {
             for (Ristorante r : ristoranti) {
@@ -132,7 +144,16 @@ public class RecensioneManager {
     }
 
 
-
+    /**
+     * Rimuove le recensioni duplicate dalla lista interna.
+     *
+     * Una recensione è considerata duplicata se ha lo stesso autore, nome del ristorante,
+     * testo, numero di stelle e data. Il metodo costruisce una chiave univoca per ciascuna
+     * recensione e conserva solo la prima occorrenza di ogni chiave.
+     *
+     * Dopo la rimozione, la lista aggiornata viene salvata su file e viene stampato
+     * un messaggio di conferma.
+     */
 
     public void rimuoviDuplicati() {
         Set<String> chiaviUniche = new HashSet<>();
